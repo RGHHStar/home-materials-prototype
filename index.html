@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Understand and compare home materials for health, sustainability, performance, and cost in Canada." />
+    <title>EverDwell | Home Material Guide</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <button class="brand" type="button" data-route="home" aria-label="Back to home" data-i18n-aria-label="backHomeLabel">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M5 15.4 16 6l11 9.4v10.1a1.5 1.5 0 0 1-1.5 1.5h-19A1.5 1.5 0 0 1 5 25.5V15.4Z"/><path d="M12 27v-8h8v8"/></svg>
+        </span>
+        <span>EverDwell</span>
+        <small data-i18n="brandSubtitle">Home Material Guide</small>
+      </button>
+      <div class="header-actions">
+        <nav class="top-nav" aria-label="Main navigation" data-i18n-aria-label="mainNavLabel">
+          <button type="button" data-route="assessment" data-i18n="navAssessment">Home assessment</button>
+          <button type="button" data-route="identify" data-i18n="navIdentify">Identify existing materials</button>
+          <button type="button" data-route="house" data-i18n="navHouse">Build a home</button>
+        </nav>
+        <div class="language-switcher" aria-label="Language" data-i18n-aria-label="languageLabel">
+          <button type="button" data-lang="en" class="active">EN</button>
+          <button type="button" data-lang="fr">FR</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="app" tabindex="-1">
+      <section class="view home-view active" data-view="home">
+        <div class="hero hero-feature">
+          <div class="hero-copy">
+            <div class="eyebrow" data-i18n="heroEyebrow">A healthier home starts with understanding its impact</div>
+            <h1 data-i18n="heroTitle">How sustainable is your home?</h1>
+            <p data-i18n="heroIntro">Answer a few practical questions about energy, water, materials, waste, and daily habits.</p>
+            <button class="primary-btn hero-action" type="button" data-route="assessment"><span data-i18n="startAssessment">Start the home assessment</span> <span aria-hidden="true">→</span></button>
+            <div class="hero-note"><span class="note-icon" aria-hidden="true">i</span><span data-i18n="assessmentTime">About 4 minutes · No account required</span></div>
+          </div>
+          <figure class="hero-photo">
+            <img src="assets/passive-house.jpg" alt="Modern energy-efficient house" data-i18n-alt="heroImageAlt" />
+            <figcaption data-i18n="heroCaption">Every design choice shapes a home’s long-term impact.</figcaption>
+          </figure>
+        </div>
+
+        <div class="path-grid" aria-label="Choose your situation" data-i18n-aria-label="chooseSituationLabel">
+          <article class="path-card path-existing">
+            <div class="path-illustration" aria-hidden="true">
+              <svg viewBox="0 0 160 110">
+                <path class="house-fill" d="M30 50 80 13l50 37v47H30Z"/>
+                <path class="house-line" d="M22 55 80 12l58 43M31 49v49h98V49M69 98V67h23v31"/>
+                <path class="scan-line" d="M42 57h24M42 67h16M101 57h17M101 67h11"/>
+              </svg>
+            </div>
+            <div class="path-number">01</div>
+            <h2 data-i18n="existingTitle">I already own a home</h2>
+            <p data-i18n="existingIntro">Not sure what material you have? Describe what it looks like or enter a name, and we’ll suggest likely matches.</p>
+            <button class="primary-btn" type="button" data-route="identify">
+              <span data-i18n="startIdentify">Identify a material</span> <span aria-hidden="true">→</span>
+            </button>
+          </article>
+
+          <article class="path-card path-building">
+            <div class="path-illustration" aria-hidden="true">
+              <svg viewBox="0 0 160 110">
+                <path class="house-fill" d="M28 94V48L78 15l50 33v46Z"/>
+                <path class="house-line" d="M20 54 78 15l58 39M29 48v47h99V48M43 59h70M43 72h70M43 85h70"/>
+                <path class="build-line" d="M54 45v50M78 30v65M103 45v50"/>
+              </svg>
+            </div>
+            <div class="path-number">02</div>
+            <h2 data-i18n="buildingTitle">I’m planning to build</h2>
+            <p data-i18n="buildingIntro">Start with a part of the home, explore available materials, and compare benefits, limitations, performance, and cost.</p>
+            <button class="primary-btn dark" type="button" data-route="build">
+              <span data-i18n="browseMaterials">Browse materials</span> <span aria-hidden="true">→</span>
+            </button>
+          </article>
+        </div>
+
+        <article class="builder-promo">
+          <div class="builder-promo-art" aria-hidden="true">
+            <svg viewBox="0 0 300 180"><path d="M36 91 150 21l114 70v70H36Z" fill="#dcebe1"/><path d="M25 98 150 20l125 78M38 90v72h224V90" fill="none" stroke="#287154" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M76 162v-50h56v50M176 112h47v33h-47z" fill="#fff" stroke="#287154" stroke-width="4"/><path d="M151 23v139" stroke="#d66b3a" stroke-width="3" stroke-dasharray="6 7"/></svg>
+          </div>
+          <div><div class="step-tag" data-i18n="builderPromoTag">Interactive design tool</div><h2 data-i18n="builderPromoTitle">Build your own sustainable home</h2><p data-i18n="builderPromoIntro">Choose insulation, exterior walls, windows, and roofing, then watch the home’s sustainability profile change.</p></div>
+          <button class="primary-btn dark" type="button" data-route="house"><span data-i18n="openBuilder">Open the home builder</span> <span aria-hidden="true">→</span></button>
+        </article>
+
+        <div class="trust-row">
+          <span data-i18n="trustClear"><b>Clear</b> No unnecessary jargon</span>
+          <span data-i18n="trustNeutral"><b>Balanced</b> Benefits and limitations</span>
+          <span data-i18n="trustUseful"><b>Practical</b> Helpful next steps</span>
+        </div>
+      </section>
+
+      <section class="view inner-view" data-view="assessment">
+        <div class="page-heading compact assessment-heading">
+          <button class="back-link" type="button" data-route="home" data-i18n="backHome">← Back to home</button>
+          <div class="step-tag" data-i18n="assessmentTag">Environmental impact assessment</div>
+          <h1 data-i18n="assessmentTitle">Understand your home’s environmental impact</h1>
+          <p data-i18n="assessmentIntro">Your answers create a simple snapshot across six areas. This is a learning tool, not an energy audit.</p>
+        </div>
+        <section class="assessment-card" id="assessment-card">
+          <div class="assessment-progress"><div><span id="assessment-step-label"></span><b id="assessment-section-name"></b></div><span id="assessment-percent"></span></div>
+          <div class="progress-track"><i id="assessment-progress-bar"></i></div>
+          <form id="assessment-form"><div id="assessment-questions"></div><p class="assessment-error" id="assessment-error" role="alert"></p><div class="assessment-actions"><button type="button" class="secondary-btn" id="assessment-back" data-i18n="previousButton">Previous</button><button type="button" class="primary-btn" id="assessment-next"><span data-i18n="nextButton">Next</span> <span aria-hidden="true">→</span></button></div></form>
+        </section>
+        <section class="assessment-results" id="assessment-results" hidden></section>
+      </section>
+
+      <section class="view inner-view" data-view="house">
+        <div class="page-heading compact">
+          <button class="back-link" type="button" data-route="home" data-i18n="backHome">← Back to home</button>
+          <div class="step-tag" data-i18n="houseTag">Interactive design tool</div>
+          <h1 data-i18n="houseTitle">Design your sustainable home</h1>
+          <p data-i18n="houseIntro">Choose one option for each house system. Scores and the Canadian planning estimate update with every decision.</p>
+        </div>
+        <div class="design-builder-shell">
+          <aside class="builder-live-panel">
+            <div class="builder-live-heading">
+              <span data-i18n="builderLiveProfile">Live home profile</span>
+              <small data-i18n="builderLiveNote">Higher sustainability is better; lower impact and concern are better.</small>
+            </div>
+            <div class="builder-score-hero">
+              <span data-i18n="overallSustainability">Overall sustainability</span>
+              <strong id="builder-overall-score">—</strong>
+              <small>/ 100</small>
+              <i><em id="builder-overall-bar"></em></i>
+            </div>
+            <div class="builder-impact-card impact-environment">
+              <div><span data-i18n="environmentalImpactScore">Environmental impact</span><small data-i18n="lowerIsBetter">Lower is better</small></div>
+              <strong id="builder-environment-impact">—</strong>
+              <i><em id="builder-environment-bar"></em></i>
+            </div>
+            <div class="builder-impact-card impact-health">
+              <div><span data-i18n="healthConcern">Health concern</span><small data-i18n="lowerIsBetter">Lower is better</small></div>
+              <strong id="builder-health-concern">—</strong>
+              <i><em id="builder-health-bar"></em></i>
+            </div>
+            <div class="builder-progress-card">
+              <div><span data-i18n="systemsConfigured">Systems configured</span><b id="builder-configured-count">0 / 13</b></div>
+              <i><em id="builder-configured-bar"></em></i>
+            </div>
+            <div class="builder-estimate-card">
+              <span data-i18n="planningEstimate">Current planning estimate</span>
+              <strong id="builder-estimate-total">—</strong>
+              <small data-i18n="estimateBasis">Prototype basis: a typical 2,000 sq. ft. Canadian home.</small>
+              <button type="button" class="primary-btn" data-builder-open-bill disabled><span data-i18n="viewBill">View estimate summary</span><span aria-hidden="true">→</span></button>
+            </div>
+          </aside>
+          <section class="builder-workspace">
+            <div class="builder-system-visual">
+              <img id="builder-system-image" src="" alt="" />
+              <div class="builder-system-visual-copy"><span data-i18n="currentHouseSystem">Current house system</span><strong id="builder-current-system"></strong><small id="builder-current-selection"></small></div>
+            </div>
+            <div class="builder-step-line"><span data-i18n="chooseHouseSystem">1. Choose a house system</span></div>
+            <div class="builder-tabs" id="builder-tabs"></div>
+            <div class="builder-material-heading"><div><span data-i18n="chooseMaterial">2. Choose a material, device, or technology</span><h2 id="builder-material-title"></h2></div><small id="builder-material-count"></small></div>
+            <div class="builder-options" id="builder-options"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view inner-view" data-view="identify">
+        <div class="page-heading">
+          <button class="back-link" type="button" data-route="home" data-i18n="backHome">← Back to home</button>
+          <div class="step-tag" data-i18n="identifyTag">Existing home · Material identification</div>
+          <h1 data-i18n="identifyTitle">Describe the material you see</h1>
+          <p data-i18n="identifyIntro">You don’t need the technical name. Tell us where it is, then describe its colour, shape, or texture.</p>
+        </div>
+
+        <div class="identify-layout">
+          <section class="search-panel">
+            <div class="form-step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <label class="field-label" data-i18n="locationQuestion">Where is it located in the home?</label>
+                <div class="location-grid" id="identify-locations"></div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="form-step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <label class="field-label" for="material-query" data-i18n="descriptionQuestion">Enter a name or describe its appearance</label>
+                <div class="search-box">
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.2 16.2 4 4"/></svg>
+                  <input id="material-query" type="text" autocomplete="off" placeholder="For example: yellow, cotton-like, fine fibres…" data-i18n-placeholder="searchPlaceholder" />
+                  <button id="identify-submit" type="button" data-i18n="findButton">Find matches</button>
+                </div>
+                <div class="example-row">
+                  <span data-i18n="tryLabel">Try:</span>
+                  <button type="button" data-example-key="exampleYellow" data-i18n="exampleYellowLabel">Yellow and fluffy</button>
+                  <button type="button" data-example-key="exampleFoam" data-i18n="exampleFoamLabel">Hardened foam</button>
+                  <button type="button" data-example-key="exampleGrey" data-i18n="exampleGreyLabel">Grey fibre board</button>
+                </div>
+                <p class="search-error" id="search-error" role="alert"></p>
+              </div>
+            </div>
+          </section>
+
+          <aside class="help-card">
+            <div class="help-icon" aria-hidden="true">?</div>
+            <h3 data-i18n="helpTitle">What makes a useful description?</h3>
+            <ul>
+              <li data-i18n="helpColor">Colour: yellow, pink, or grey</li>
+              <li data-i18n="helpForm">Form: fluffy, foam, granules, or rigid board</li>
+              <li data-i18n="helpTouch">Texture: soft, hard, or crumbly</li>
+              <li data-i18n="helpPlace">Location: attic, wall cavity, or basement</li>
+            </ul>
+            <p data-i18n="helpWarning">Do not touch or remove an unknown material with bare hands. Suspicious materials in older homes should be inspected by a professional.</p>
+          </aside>
+        </div>
+
+        <section class="results-section" id="identify-results" hidden>
+          <div class="results-heading">
+            <div>
+              <div class="step-tag" data-i18n="resultsTag">Possible matches</div>
+              <h2 data-i18n="resultsTitle">It may be one of these materials</h2>
+            </div>
+            <p data-i18n="resultsNote">We cannot confirm a material from a text description alone. Compare the suggestions with the conditions on site.</p>
+          </div>
+          <div class="result-list" id="result-list"></div>
+        </section>
+      </section>
+
+      <section class="view inner-view" data-view="build">
+        <div class="page-heading compact plan-heading">
+          <button class="back-link" type="button" data-route="home" data-i18n="backHome">← Back to home</button>
+          <div class="step-tag" data-i18n="buildTag">Sustainable Building Plan</div>
+          <h1 data-i18n="buildTitle">Plan every system of a sustainable home</h1>
+          <p data-i18n="buildIntro">Choose a house system, then select a material, device, or technology to see its essential sustainability information.</p>
+        </div>
+        <div class="plan-breadcrumb" id="plan-breadcrumb"></div>
+        <div class="plan-view-toolbar" aria-label="Display options" data-i18n-aria-label="viewOptions">
+          <span data-i18n="viewMode">View</span>
+          <div class="plan-view-toggle" role="group">
+            <button type="button" data-plan-view="grid" aria-pressed="true">
+              <svg viewBox="0 0 18 18" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="11" y="2" width="5" height="5" rx="1"/><rect x="2" y="11" width="5" height="5" rx="1"/><rect x="11" y="11" width="5" height="5" rx="1"/></svg>
+              <span data-i18n="gridView">Cards</span>
+            </button>
+            <button type="button" data-plan-view="list" aria-pressed="false">
+              <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5.5 4h10M5.5 9h10M5.5 14h10"/><circle cx="2.5" cy="4" r=".8"/><circle cx="2.5" cy="9" r=".8"/><circle cx="2.5" cy="14" r=".8"/></svg>
+              <span data-i18n="listView">List</span>
+            </button>
+          </div>
+        </div>
+        <section id="plan-systems-view">
+          <div class="plan-section-heading"><div><span data-i18n="planLevelTwo">Level 2 · House systems</span><h2 data-i18n="chooseSystem">Choose a system</h2></div><p data-i18n="systemNote">Only practical options used in contemporary Canadian construction are included.</p></div>
+          <div class="plan-system-grid" id="plan-system-grid"></div>
+        </section>
+        <section id="plan-items-view" hidden>
+          <button class="back-link plan-back" type="button" data-plan-back data-i18n="backSystems">← All house systems</button>
+          <div class="plan-section-heading"><div><span data-i18n="planLevelThree">Level 3 · Materials, equipment, and technologies</span><h2 id="plan-system-title"></h2></div><p id="plan-system-description"></p></div>
+          <div class="plan-item-grid" id="plan-item-grid"></div>
+        </section>
+      </section>
+    </main>
+
+    <div class="compare-tray" id="compare-tray" hidden>
+      <div>
+        <b data-i18n="compareTitle">Material comparison</b>
+        <span id="compare-count">0 of 3 selected</span>
+      </div>
+      <div class="compare-chips" id="compare-chips"></div>
+      <button id="compare-open" type="button">Compare</button>
+    </div>
+
+    <dialog class="modal" id="detail-modal">
+      <div class="modal-sheet">
+        <button class="modal-close" type="button" data-close-modal aria-label="Close" data-i18n-aria-label="closeDialog">×</button>
+        <div id="detail-content"></div>
+      </div>
+    </dialog>
+
+    <dialog class="modal compare-modal" id="compare-modal">
+      <div class="modal-sheet wide">
+        <button class="modal-close" type="button" data-close-compare aria-label="Close" data-i18n-aria-label="closeDialog">×</button>
+        <div class="modal-eyebrow" data-i18n="compareEyebrow">Side-by-side comparison</div>
+        <h2 data-i18n="compareModalTitle">See which option fits you best</h2>
+        <p class="modal-intro" data-i18n="compareModalIntro">Scores offer a quick overview. Your final choice should also reflect local codes, climate, and installation conditions.</p>
+        <div class="compare-table-wrap" id="compare-table"></div>
+      </div>
+    </dialog>
+
+    <footer>
+      <div><b>EverDwell</b> · <span data-i18n="brandSubtitle">Home Material Guide</span></div>
+      <p><span data-i18n="footerDisclaimer">This prototype is for product evaluation only and does not replace professional inspection, medical advice, contractor quotes, or building codes.</span> · <button type="button" id="credits-open" data-i18n="imageCredits">Image credits</button></p>
+    </footer>
+
+    <dialog class="modal" id="credits-modal"><div class="modal-sheet credits-sheet"><button class="modal-close" type="button" data-close-credits aria-label="Close" data-i18n-aria-label="closeDialog">×</button><div class="modal-eyebrow" data-i18n="imageCredits">Image credits</div><h2 data-i18n="creditsTitle">Photography sources</h2><div id="credits-content"></div></div></dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>

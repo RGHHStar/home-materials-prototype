@@ -1,0 +1,840 @@
+[
+  {
+    "system": "Foundation & Structure",
+    "item": "Conventional Concrete",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Foundation & Structure",
+    "item": "Low-Carbon Concrete",
+    "error": "Image 429"
+  },
+  {
+    "system": "Foundation & Structure",
+    "item": "Concrete Blocks",
+    "error": "Image 429"
+  },
+  {
+    "file": "assets/plan/foundation-04.jpg",
+    "system": "Foundation & Structure",
+    "item": "Structural Steel",
+    "title": "File:Riverside Museum building structure 2008 Glasgow Scotland.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Riverside_Museum_building_structure_2008_Glasgow_Scotland.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Midwich Cuckoo"
+  },
+  {
+    "system": "Foundation & Structure",
+    "item": "Timber Frame",
+    "error": "Image 429"
+  },
+  {
+    "file": "assets/plan/foundation-06.jpg",
+    "system": "Foundation & Structure",
+    "item": "CLT",
+    "title": "File:Fichte Dreischichtplatte 2009.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Fichte_Dreischichtplatte_2009.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Elke Wetzig (elya)"
+  },
+  {
+    "system": "Foundation & Structure",
+    "item": "Glulam",
+    "error": "Image 429"
+  },
+  {
+    "system": "Foundation & Structure",
+    "item": "Brick",
+    "error": "Image 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Brick",
+    "error": "Image 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Wood Siding",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Fibre Cement Siding",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Metal Siding",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Stucco",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Plywood",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "OSB",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Weather Barrier",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Fibreglass Insulation",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Mineral Wool",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Cellulose",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Spray Foam",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "EPS / XPS Foam",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Exterior Walls",
+    "item": "Wood Fibre Insulation",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Interior Walls & Ceilings",
+    "item": "Drywall / Gypsum Board",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Interior Walls & Ceilings",
+    "item": "Plaster",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Interior Walls & Ceilings",
+    "item": "Plywood",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Interior Walls & Ceilings",
+    "item": "Wood Panels",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Interior Walls & Ceilings",
+    "item": "Acoustic Panels",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Interior Walls & Ceilings",
+    "item": "Ceiling Tiles",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Interior Walls & Ceilings",
+    "item": "Wallpaper",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "Fibreglass",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "Mineral Wool",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "Cellulose",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "Spray Foam",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "EPS",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "XPS",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "Polyiso",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "Wood Fibre",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "Cork",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "Hemp",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "Recycled Denim",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Insulation",
+    "item": "Paper-Based Insulation",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Roofing",
+    "item": "Asphalt Shingles",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Roofing",
+    "item": "Metal Roofing",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Roofing",
+    "item": "Clay / Concrete Tiles",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Roofing",
+    "item": "Slate",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Roofing",
+    "item": "Green Roof",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Roofing",
+    "item": "Cool Roof",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Roofing",
+    "item": "Solar Roof",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Roofing",
+    "item": "EPDM / TPO Membrane",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Windows & Doors",
+    "item": "Double-Pane Windows",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Windows & Doors",
+    "item": "Triple-Pane Windows",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Windows & Doors",
+    "item": "Low-E Windows",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Windows & Doors",
+    "item": "Wood Frames",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Windows & Doors",
+    "item": "Aluminum Frames",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Windows & Doors",
+    "item": "Fibreglass Frames",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Windows & Doors",
+    "item": "PVC Frames",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Windows & Doors",
+    "item": "Solid Wood Doors",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Windows & Doors",
+    "item": "Steel Doors",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Windows & Doors",
+    "item": "Fibreglass Doors",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Windows & Doors",
+    "item": "Composite Doors",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Flooring",
+    "item": "Hardwood",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Flooring",
+    "item": "Engineered Wood",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Flooring",
+    "item": "Bamboo",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Flooring",
+    "item": "Cork",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Flooring",
+    "item": "Laminate",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Flooring",
+    "item": "Vinyl / LVP",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Flooring",
+    "item": "Linoleum",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Flooring",
+    "item": "Ceramic / Porcelain Tile",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Flooring",
+    "item": "Natural Stone",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Flooring",
+    "item": "Polished Concrete",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Flooring",
+    "item": "Carpet",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Paints & Coatings",
+    "item": "Interior Paint",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Paints & Coatings",
+    "item": "Water-Based Paint",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Paints & Coatings",
+    "item": "Oil-Based Paint",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Paints & Coatings",
+    "item": "Mineral Paint",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Paints & Coatings",
+    "item": "Wood Stain",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Paints & Coatings",
+    "item": "Varnish",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Paints & Coatings",
+    "item": "Waterproof Coating",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Paints & Coatings",
+    "item": "Concrete Sealer",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Adhesives, Sealants & Grout",
+    "item": "Construction Adhesive",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Adhesives, Sealants & Grout",
+    "item": "Wood Glue",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Adhesives, Sealants & Grout",
+    "item": "Epoxy",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Adhesives, Sealants & Grout",
+    "item": "Flooring Adhesive",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Adhesives, Sealants & Grout",
+    "item": "Tile Adhesive",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Adhesives, Sealants & Grout",
+    "item": "Silicone Sealant",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Adhesives, Sealants & Grout",
+    "item": "Acrylic Sealant",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Adhesives, Sealants & Grout",
+    "item": "Polyurethane Sealant",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Adhesives, Sealants & Grout",
+    "item": "Cement Grout",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Adhesives, Sealants & Grout",
+    "item": "Epoxy Grout",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Waterproofing",
+    "item": "EPDM",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Waterproofing",
+    "item": "TPO",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Waterproofing",
+    "item": "PVC Membrane",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Waterproofing",
+    "item": "Bitumen Membrane",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Waterproofing",
+    "item": "Liquid Waterproofing",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Waterproofing",
+    "item": "Cementitious Waterproofing",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Plumbing & Water",
+    "item": "Copper Pipe",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Plumbing & Water",
+    "item": "PEX Pipe",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Plumbing & Water",
+    "item": "PVC / CPVC Pipe",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Plumbing & Water",
+    "item": "Low-Flow Faucet",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Plumbing & Water",
+    "item": "Low-Flow Showerhead",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Plumbing & Water",
+    "item": "Dual-Flush Toilet",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Plumbing & Water",
+    "item": "Rainwater Collection",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Plumbing & Water",
+    "item": "Greywater Recycling",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Water Heating",
+    "item": "Gas Water Heater",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Water Heating",
+    "item": "Electric Water Heater",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Water Heating",
+    "item": "Tankless Water Heater",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Water Heating",
+    "item": "Heat Pump Water Heater",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Water Heating",
+    "item": "Solar Water Heater",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Heating, Cooling & Ventilation",
+    "item": "Gas Furnace",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Heating, Cooling & Ventilation",
+    "item": "Boiler",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Heating, Cooling & Ventilation",
+    "item": "Air-Source Heat Pump",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Heating, Cooling & Ventilation",
+    "item": "Ground-Source Heat Pump",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Heating, Cooling & Ventilation",
+    "item": "Mini-Split Heat Pump",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Heating, Cooling & Ventilation",
+    "item": "Central Air Conditioning",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Heating, Cooling & Ventilation",
+    "item": "Radiant Floor Heating",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Heating, Cooling & Ventilation",
+    "item": "HRV / ERV",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Heating, Cooling & Ventilation",
+    "item": "Smart Thermostat",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Electrical System",
+    "item": "Copper Wiring",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Electrical System",
+    "item": "PVC / Metal Conduit",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Electrical System",
+    "item": "Smart Plug",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Electrical System",
+    "item": "Smart Power Strip",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Electrical System",
+    "item": "Occupancy Sensor",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Electrical System",
+    "item": "Home Energy Monitor",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Lighting",
+    "item": "LED",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Lighting",
+    "item": "Smart LED",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Lighting",
+    "item": "Dimmable LED",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Lighting",
+    "item": "Motion-Sensor Lighting",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Lighting",
+    "item": "Daylight Sensor",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Lighting",
+    "item": "Skylight",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Renewable Energy",
+    "item": "Solar Panels",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Renewable Energy",
+    "item": "Solar Shingles",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Renewable Energy",
+    "item": "Home Battery",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Renewable Energy",
+    "item": "Solar Water Heating",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Renewable Energy",
+    "item": "Geothermal System",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Kitchen",
+    "item": "Solid Wood Cabinets",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Kitchen",
+    "item": "Plywood Cabinets",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Kitchen",
+    "item": "MDF Cabinets",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Kitchen",
+    "item": "Bamboo Cabinets",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Kitchen",
+    "item": "Quartz Countertop",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Kitchen",
+    "item": "Granite Countertop",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Kitchen",
+    "item": "Wood Countertop",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Kitchen",
+    "item": "Recycled Glass Countertop",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Kitchen",
+    "item": "Stainless Steel Countertop",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Kitchen",
+    "item": "Low-Flow Faucet",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Bathroom",
+    "item": "Ceramic / Porcelain Tile",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Bathroom",
+    "item": "Natural Stone",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Bathroom",
+    "item": "Recycled Glass Tile",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Bathroom",
+    "item": "Waterproof Membrane",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Bathroom",
+    "item": "Grout",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Bathroom",
+    "item": "Low-Flow Showerhead",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Bathroom",
+    "item": "Dual-Flush Toilet",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Bathroom",
+    "item": "Water-Saving Faucet",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Bathroom",
+    "item": "Wood / Plywood Cabinet",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Bathroom",
+    "item": "Bamboo Cabinet",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Appliances",
+    "item": "Refrigerator",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Appliances",
+    "item": "Dishwasher",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Appliances",
+    "item": "Washing Machine",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Appliances",
+    "item": "Heat Pump Dryer",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Appliances",
+    "item": "Electric Oven",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Appliances",
+    "item": "Induction Cooktop",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Appliances",
+    "item": "ENERGY STAR Appliances",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Furniture & Built-In Materials",
+    "item": "Solid Wood",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Furniture & Built-In Materials",
+    "item": "Bamboo",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Furniture & Built-In Materials",
+    "item": "Plywood",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Furniture & Built-In Materials",
+    "item": "MDF",
+    "error": "Commons API 429"
+  },
+  {
+    "system": "Furniture & Built-In Materials",
+    "item": "Particle Board",
+    "error": "Commons API 429"
+  }
+]
