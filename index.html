@@ -6,6 +6,7 @@
     <meta name="description" content="Understand and compare home materials for health, sustainability, performance, and cost in Canada." />
     <title>EverDwell | Home Material Guide</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="learning-article.css" />
   </head>
   <body>
     <header class="site-header">
@@ -30,68 +31,95 @@
     </header>
 
     <main id="app" tabindex="-1">
-      <section class="view home-view active" data-view="home">
-        <div class="hero hero-feature">
-          <div class="hero-copy">
-            <div class="eyebrow" data-i18n="heroEyebrow">A healthier home starts with understanding its impact</div>
-            <h1 data-i18n="heroTitle">How sustainable is your home?</h1>
-            <p data-i18n="heroIntro">Answer a few practical questions about energy, water, materials, waste, and daily habits.</p>
-            <button class="primary-btn hero-action" type="button" data-route="assessment"><span data-i18n="startAssessment">Start the home assessment</span> <span aria-hidden="true">→</span></button>
-            <div class="hero-note"><span class="note-icon" aria-hidden="true">i</span><span data-i18n="assessmentTime">About 4 minutes · No account required</span></div>
-          </div>
-          <figure class="hero-photo">
-            <img src="assets/passive-house.jpg" alt="Modern energy-efficient house" data-i18n-alt="heroImageAlt" />
-            <figcaption data-i18n="heroCaption">Every design choice shapes a home’s long-term impact.</figcaption>
-          </figure>
-        </div>
-
-        <div class="path-grid" aria-label="Choose your situation" data-i18n-aria-label="chooseSituationLabel">
-          <article class="path-card path-existing">
-            <div class="path-illustration" aria-hidden="true">
-              <svg viewBox="0 0 160 110">
-                <path class="house-fill" d="M30 50 80 13l50 37v47H30Z"/>
-                <path class="house-line" d="M22 55 80 12l58 43M31 49v49h98V49M69 98V67h23v31"/>
-                <path class="scan-line" d="M42 57h24M42 67h16M101 57h17M101 67h11"/>
-              </svg>
-            </div>
-            <div class="path-number">01</div>
-            <h2 data-i18n="existingTitle">I already own a home</h2>
-            <p data-i18n="existingIntro">Not sure what material you have? Describe what it looks like or enter a name, and we’ll suggest likely matches.</p>
-            <button class="primary-btn" type="button" data-route="identify">
-              <span data-i18n="startIdentify">Identify a material</span> <span aria-hidden="true">→</span>
+      <section class="view home-view home-editorial active" data-view="home">
+        <section class="home-cinematic home-impact" aria-labelledby="home-impact-title">
+          <img src="assets/plan/system-renewable.jpg" alt="A contemporary Canadian home with solar panels" data-i18n-alt="homeImpactImageAlt" />
+          <div class="home-media-shade" aria-hidden="true"></div>
+          <div class="home-media-content">
+            <span class="home-section-label" data-i18n="homeImpactEyebrow">The scale of the challenge</span>
+            <h1 id="home-impact-title" data-i18n="homeImpactStatement">Buildings and construction account for about 37% of global CO₂ emissions.</h1>
+            <button class="home-text-link light" type="button" data-route="carbon-article">
+              <span data-i18n="homeImpactLink">Why does housing have such a large footprint?</span>
+              <span aria-hidden="true">↗</span>
             </button>
-          </article>
-
-          <article class="path-card path-building">
-            <div class="path-illustration" aria-hidden="true">
-              <svg viewBox="0 0 160 110">
-                <path class="house-fill" d="M28 94V48L78 15l50 33v46Z"/>
-                <path class="house-line" d="M20 54 78 15l58 39M29 48v47h99V48M43 59h70M43 72h70M43 85h70"/>
-                <path class="build-line" d="M54 45v50M78 30v65M103 45v50"/>
-              </svg>
-            </div>
-            <div class="path-number">02</div>
-            <h2 data-i18n="buildingTitle">I’m planning to build</h2>
-            <p data-i18n="buildingIntro">Start with a part of the home, explore available materials, and compare benefits, limitations, performance, and cost.</p>
-            <button class="primary-btn dark" type="button" data-route="build">
-              <span data-i18n="browseMaterials">Browse materials</span> <span aria-hidden="true">→</span>
-            </button>
-          </article>
-        </div>
-
-        <article class="builder-promo">
-          <div class="builder-promo-art" aria-hidden="true">
-            <svg viewBox="0 0 300 180"><path d="M36 91 150 21l114 70v70H36Z" fill="#dcebe1"/><path d="M25 98 150 20l125 78M38 90v72h224V90" fill="none" stroke="#287154" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M76 162v-50h56v50M176 112h47v33h-47z" fill="#fff" stroke="#287154" stroke-width="4"/><path d="M151 23v139" stroke="#d66b3a" stroke-width="3" stroke-dasharray="6 7"/></svg>
           </div>
-          <div><div class="step-tag" data-i18n="builderPromoTag">Interactive design tool</div><h2 data-i18n="builderPromoTitle">Build your own sustainable home</h2><p data-i18n="builderPromoIntro">Choose insulation, exterior walls, windows, and roofing, then watch the home’s sustainability profile change.</p></div>
-          <button class="primary-btn dark" type="button" data-route="house"><span data-i18n="openBuilder">Open the home builder</span> <span aria-hidden="true">→</span></button>
-        </article>
+        </section>
 
-        <div class="trust-row">
-          <span data-i18n="trustClear"><b>Clear</b> No unnecessary jargon</span>
-          <span data-i18n="trustNeutral"><b>Balanced</b> Benefits and limitations</span>
-          <span data-i18n="trustUseful"><b>Practical</b> Helpful next steps</span>
-        </div>
+        <section class="home-cinematic home-assessment-feature" aria-labelledby="home-assessment-title">
+          <img src="assets/passive-house.jpg" alt="A modern energy-efficient home surrounded by greenery" data-i18n-alt="homeAssessmentImageAlt" />
+          <div class="home-media-shade" aria-hidden="true"></div>
+          <div class="home-media-content">
+            <span class="home-section-label" data-i18n="homeAssessmentEyebrow">Start with your home</span>
+            <h2 id="home-assessment-title" data-i18n="homeAssessmentTitle">How sustainable is your home?</h2>
+            <p data-i18n="homeAssessmentIntro">Find out how your home performs in energy, materials, water use, and environmental impact.</p>
+            <button class="home-outline-btn" type="button" data-route="assessment">
+              <span data-i18n="homeAssessmentCta">Check my home</span>
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="home-manifesto" aria-labelledby="home-manifesto-title">
+          <span class="home-section-label dark" data-i18n="homeManifestoEyebrow">Why choices matter</span>
+          <h2 id="home-manifesto-title">
+            <span data-i18n="homeManifestoLineOne">Every home leaves a footprint.</span>
+            <span data-i18n="homeManifestoLineTwo">The choices inside it determine how large that footprint becomes.</span>
+          </h2>
+        </section>
+
+        <section class="home-tools" aria-labelledby="home-tools-title">
+          <header class="home-section-heading">
+            <span class="home-section-label dark" data-i18n="homeToolsEyebrow">Planning tools</span>
+            <h2 id="home-tools-title" data-i18n="homeToolsTitle">Turn better information into a better home.</h2>
+          </header>
+          <div class="home-tool-grid">
+            <article class="path-card path-building">
+              <div class="path-illustration" aria-hidden="true">
+                <svg viewBox="0 0 160 110">
+                  <path class="house-fill" d="M28 94V48L78 15l50 33v46Z"/>
+                  <path class="house-line" d="M20 54 78 15l58 39M29 48v47h99V48M43 59h70M43 72h70M43 85h70"/>
+                  <path class="build-line" d="M54 45v50M78 30v65M103 45v50"/>
+                </svg>
+              </div>
+              <div class="path-number">01</div>
+              <h2 data-i18n="buildingTitle">I’m planning to build</h2>
+              <p data-i18n="buildingIntro">Plan the home system by system, then review concise sustainability, performance, and Canadian price information for each option.</p>
+              <button class="primary-btn dark" type="button" data-route="build">
+                <span data-i18n="browseMaterials">Create a building plan</span> <span aria-hidden="true">→</span>
+              </button>
+            </article>
+
+            <article class="builder-promo">
+              <div class="builder-promo-art" aria-hidden="true">
+                <svg viewBox="0 0 300 180"><path d="M36 91 150 21l114 70v70H36Z" fill="#dcebe1"/><path d="M25 98 150 20l125 78M38 90v72h224V90" fill="none" stroke="#287154" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M76 162v-50h56v50M176 112h47v33h-47z" fill="#fff" stroke="#287154" stroke-width="4"/><path d="M151 23v139" stroke="#d66b3a" stroke-width="3" stroke-dasharray="6 7"/></svg>
+              </div>
+              <div><div class="step-tag" data-i18n="builderPromoTag">Interactive design tool</div><h2 data-i18n="builderPromoTitle">Build your own sustainable home</h2><p data-i18n="builderPromoIntro">Choose insulation, exterior walls, windows, and roofing, then watch the home’s sustainability profile change.</p></div>
+              <button class="primary-btn dark" type="button" data-route="house"><span data-i18n="openBuilder">Open the home builder</span> <span aria-hidden="true">→</span></button>
+            </article>
+          </div>
+        </section>
+
+        <section class="home-learning" aria-labelledby="home-learning-title">
+          <div class="home-learning-intro">
+            <span class="home-section-label dark" data-i18n="homeLearningEyebrow">Learning</span>
+            <h2 id="home-learning-title" data-i18n="homeLearningTitle">Understand the choices behind a sustainable home.</h2>
+            <p data-i18n="homeLearningIntro">Short, practical explanations connect building decisions with carbon, health, and long-term performance.</p>
+          </div>
+          <div class="home-article-list">
+            <button type="button" class="home-article-row" data-route="carbon-article">
+              <span>01</span><strong data-i18n="homeArticleOne">Why do buildings produce so much CO₂?</strong><i data-i18n="homeReadArticle">Read article</i><b aria-hidden="true">→</b>
+            </button>
+            <div class="home-article-row muted">
+              <span>02</span><strong data-i18n="homeArticleTwo">How building materials affect indoor air quality</strong><i data-i18n="homeComingSoon">Coming soon</i>
+            </div>
+            <div class="home-article-row muted">
+              <span>03</span><strong data-i18n="homeArticleThree">What makes a material more sustainable?</strong><i data-i18n="homeComingSoon">Coming soon</i>
+            </div>
+            <button type="button" class="home-article-row" data-route="sustainable-housing">
+              <span>04</span><strong data-i18n="homeArticleFour">Why is sustainable housing important?</strong><i data-i18n="homeReadArticle">Read article</i><b aria-hidden="true">→</b>
+            </button>
+          </div>
+        </section>
       </section>
 
       <section class="view inner-view" data-view="assessment">
@@ -256,6 +284,22 @@
           <div class="plan-item-grid" id="plan-item-grid"></div>
         </section>
       </section>
+
+      <section class="view inner-view article-view" data-view="carbon-article">
+        <button class="back-link" type="button" data-route="home" data-i18n="backHome">← Back to home</button>
+        <article class="article-shell">
+          <div class="step-tag" data-i18n="carbonArticleTag">Housing &amp; emissions</div>
+          <h1 data-i18n="carbonArticleTitle">Why do buildings and construction produce so much CO₂?</h1>
+          <div class="article-placeholder">
+            <span data-i18n="carbonArticleStatus">Article placeholder</span>
+            <p data-i18n="carbonArticlePlaceholder">Article content will be added here.</p>
+          </div>
+        </article>
+      </section>
+      <section class="view inner-view learning-article-view" data-view="sustainable-housing">
+        <button class="back-link" type="button" data-route="home" data-i18n="backHome">← Back to home</button>
+        <article id="sustainable-housing-content" class="learning-story" aria-labelledby="sustainable-housing-title"></article>
+      </section>
     </main>
 
     <div class="compare-tray" id="compare-tray" hidden>
@@ -291,6 +335,7 @@
 
     <dialog class="modal" id="credits-modal"><div class="modal-sheet credits-sheet"><button class="modal-close" type="button" data-close-credits aria-label="Close" data-i18n-aria-label="closeDialog">×</button><div class="modal-eyebrow" data-i18n="imageCredits">Image credits</div><h2 data-i18n="creditsTitle">Photography sources</h2><div id="credits-content"></div></div></dialog>
 
+    <script src="learning-article.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
