@@ -4,5 +4,5 @@ window.EVERDWELL_AUTH_CONFIG = Object.freeze({
   supabaseUrl: 'https://bmyvzfxzrppajuntwfxg.supabase.co',
   publishableKey: 'sb_publishable_3QXe2UKLqty40BY5SE4RQQ_7vcwwrz-',
   emailOtpEnabled: true,
-  googleEnabled: false
+  googleEnabled: true
 });
