@@ -37,8 +37,15 @@
 
     <main id="app" tabindex="-1">
       <section class="view home-view home-editorial active" data-view="home">
+        <section class="home-intro" aria-labelledby="home-intro-title">
+          <div class="home-intro-layout">
+            <h2 id="home-intro-title"><span>Rethinking the</span> <span>Way</span> <span>We Live</span></h2>
+            <p class="home-intro-description">EverDwell is a sustainability platform dedicated to reimagining the future of housing, empowering people to make more informed, responsible, and environmentally conscious choices for a better tomorrow.</p>
+          </div>
+        </section>
+
         <section class="home-cinematic home-impact" aria-labelledby="home-impact-title">
-          <img src="assets/plan/system-renewable.jpg" alt="A contemporary Canadian home with solar panels" data-i18n-alt="homeImpactImageAlt" />
+          <img src="assets/home-carbon-industry.png" alt="Industrial chimneys with visible plumes above a factory complex" data-i18n-alt="homeImpactImageAlt" />
           <div class="home-media-shade" aria-hidden="true"></div>
           <div class="home-media-content">
             <span class="home-section-label" data-i18n="homeImpactEyebrow">The scale of the challenge</span>
@@ -65,7 +72,6 @@
         </section>
 
         <section class="home-manifesto" aria-labelledby="home-manifesto-title">
-          <span class="home-section-label dark" data-i18n="homeManifestoEyebrow">Why choices matter</span>
           <h2 id="home-manifesto-title">
             <span data-i18n="homeManifestoLineOne">Every home leaves a footprint.</span>
             <span data-i18n="homeManifestoLineTwo">The choices inside it determine how large that footprint becomes.</span>
@@ -380,6 +386,7 @@
     <script src="auth-config.js"></script>
     <script src="auth.js"></script>
     <script src="learning-article.js"></script>
+    <script src="home-manifesto.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

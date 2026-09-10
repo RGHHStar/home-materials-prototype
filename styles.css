@@ -2,7 +2,7 @@
   --ink: #17342c;
   --muted: #617069;
   --line: #d9dfda;
-  --paper: #f2f0e9;
+  --paper: #ffffff;
   --surface: #ffffff;
   --green: #236a52;
   --green-deep: #103f34;
@@ -36,7 +36,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(40,113,84,.2
   align-items: center;
   justify-content: space-between;
   padding: 0 clamp(22px, 5vw, 72px);
-  background: rgba(245, 243, 237, .92);
+  background: #ffffff;
   backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(30,42,36,.08);
   position: sticky;
@@ -752,7 +752,9 @@ footer button { border: 0; background: none; padding: 0; color: var(--green); te
 
 .home-cinematic + .home-cinematic { margin-top: clamp(18px, 2.3vw, 30px); }
 .home-cinematic > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
-.home-impact > img { object-position: center 53%; filter: saturate(.8) contrast(1.03); }
+.home-cinematic.home-impact { min-height: 0; aspect-ratio: 16 / 7; }
+.home-impact > img { object-position: center top; }
+.home-impact .home-media-content { position: absolute; inset: 0; }
 .home-assessment-feature > img { object-position: center 58%; filter: saturate(.82) contrast(1.02); }
 .home-media-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(7,31,26,.84) 0%, rgba(9,35,29,.67) 54%, rgba(9,32,27,.29) 100%); }
 .home-assessment-feature .home-media-shade { background: linear-gradient(90deg, rgba(10,32,27,.79) 0%, rgba(10,35,29,.58) 49%, rgba(10,31,26,.2) 100%); }
@@ -770,9 +772,44 @@ footer button { border: 0; background: none; padding: 0; color: var(--green); te
 .home-outline-btn:hover { background: white; color: var(--green-deep); }
 
 .home-manifesto { padding: clamp(72px,8.5vw,122px) clamp(12px,7vw,98px); border-bottom: 1px solid var(--line); }
-.home-manifesto h2 { max-width: 1110px; margin: 20px 0 0; font: 500 clamp(38px,4.7vw,64px)/1.08 Georgia,serif; letter-spacing: -.04em; text-wrap: balance; }
+.home-manifesto h2 { max-width: 1110px; margin: 0 auto; text-align: center; font: 500 clamp(38px,4.7vw,64px)/1.08 Georgia,serif; letter-spacing: -.04em; text-wrap: balance; }
 .home-manifesto h2 span { display: block; }
-.home-manifesto h2 span:last-child { max-width: 920px; margin-top: 14px; color: var(--green); font-size: .7em; line-height: 1.16; letter-spacing: -.025em; }
+.home-manifesto h2 span:last-child { max-width: 920px; margin: 14px auto 0; color: var(--green); font-size: .7em; line-height: 1.16; letter-spacing: -.025em; }
+
+.home-intro { min-height: calc(100svh - 110px); display: flex; align-items: center; padding: clamp(28px,3vw,48px) 0; background: #fff; color: #000; }
+/* Staggered title and inset description follow the supplied one-slide layout. */
+.home-intro-layout { position: relative; container-type: inline-size; width: 100%; max-width: none; margin-inline: auto; padding-block: 1.5% 3%; }
+.home-intro h2 { margin: 0; font: 700 12.4cqw/1.08 Arial,Helvetica,sans-serif; letter-spacing: -.055em; text-transform: uppercase; }
+.home-intro h2 > span { display: block; width: max-content; max-width: 100%; white-space: nowrap; }
+.home-intro h2 > span:nth-child(1) { margin-left: min(1rem,3cqw); }
+.home-intro h2 > span:nth-child(2) { margin-left: auto; margin-top: 1.1cqw; }
+.home-intro h2 > span:nth-child(3) { margin-left: 31%; margin-top: 5.5cqw; }
+.home-intro-description { position: absolute; top: calc(18cqw + 1.5%); left: 2%; width: 62%; margin: 0; font: 500 2cqw/1.4 Arial,Helvetica,sans-serif; letter-spacing: -.015em; text-indent: 4ch; white-space: normal; }
+/* Independent line masks, with a subtle three-stage entrance rhythm. */
+.home-view.active { animation: none; }
+.home-intro-description > span { display: inline-block; vertical-align: top; white-space: nowrap; text-indent: 0; }
+.home-intro.is-reveal-ready [data-manifesto-line] {
+  opacity: 0;
+  clip-path: inset(100% -.12em 0 -.12em);
+  transition: clip-path 900ms ease-in-out, opacity 900ms ease-in-out;
+  transition-delay: 0ms;
+}
+.home-intro h2 > span:nth-child(2), .home-intro-description > span { --reveal-delay: 100ms; }
+.home-intro h2 > span:nth-child(3) { --reveal-delay: 200ms; }
+.home-intro.is-reveal-ready.is-visible [data-manifesto-line] { opacity: 1; clip-path: inset(-.12em -.12em -.12em -.12em); transition-delay: var(--reveal-delay,0ms); }
+@media (max-width: 800px) {
+  .home-intro { min-height: auto; padding-block: 72px; }
+  .home-intro h2 { font-size: 12.4cqw; }
+  .home-intro h2 > span:nth-child(1) { margin-left: min(1rem,3cqw); }
+  .home-intro h2 > span:nth-child(2) { margin-left: auto; }
+  .home-intro h2 > span:nth-child(3) { margin-left: 29%; margin-top: 1cqw; }
+  .home-intro-description { position: static; width: min(100%,560px); margin: 32px auto 0; font-size: 1.1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Requested exception for the stationary intro reveal only.
+     Keep the rest of the site's reduced-motion behavior unchanged. */
+  .home-intro.is-reveal-ready [data-manifesto-line] { transition-duration: 900ms !important; }
+}
 
 .home-tools, .home-learning { padding: clamp(66px,7.4vw,104px) 0; }
 .home-section-heading { display: block; margin-bottom: 34px; }
@@ -837,4 +874,11 @@ button.home-article-row:hover > b { transform: translateX(4px); }
   .home-article-row > i { display: none; }
   .home-article-row > strong { font-size: 20px; }
   .home-article-row.muted { grid-template-columns: 34px minmax(0,1fr); }
+}
+
+/* Keep the photo at 16:7 on narrow screens without shrinking or clipping its text. */
+@media (max-width: 650px) {
+  .home-cinematic.home-impact { aspect-ratio: auto; padding-top: 43.75%; }
+  .home-impact > img, .home-impact > .home-media-shade { height: auto; aspect-ratio: 16 / 7; bottom: auto; }
+  .home-impact .home-media-content { position: relative; inset: auto; min-height: 0; }
 }
