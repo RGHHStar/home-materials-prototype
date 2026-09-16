@@ -21,7 +21,6 @@
       <div class="header-actions">
         <nav class="top-nav" aria-label="Main navigation" data-i18n-aria-label="mainNavLabel">
           <button type="button" data-route="assessment" data-i18n="navAssessment">Home assessment</button>
-          <button type="button" data-route="identify" data-i18n="navIdentify">Identify existing materials</button>
           <button type="button" data-route="house" data-i18n="navHouse">Build a home</button>
         </nav>
         <div class="language-switcher" aria-label="Language" data-i18n-aria-label="languageLabel">
@@ -93,10 +92,10 @@
                 </svg>
               </div>
               <div class="path-number">01</div>
-              <h2 data-i18n="buildingTitle">I’m planning to build</h2>
-              <p data-i18n="buildingIntro">Plan the home system by system, then review concise sustainability, performance, and Canadian price information for each option.</p>
+              <h2 data-i18n="buildingTitle">Material Explorer</h2>
+              <p data-i18n="buildingIntro">Explore materials by house system and compare their environmental impact, health considerations, durability, and Canadian reference prices.</p>
               <button class="primary-btn dark" type="button" data-route="build">
-                <span data-i18n="browseMaterials">Create a building plan</span> <span aria-hidden="true">→</span>
+                <span data-i18n="browseMaterials">Explore materials</span> <span aria-hidden="true">→</span>
               </button>
             </article>
 
@@ -267,9 +266,9 @@
       <section class="view inner-view" data-view="build">
         <div class="page-heading compact plan-heading">
           <button class="back-link" type="button" data-route="home" data-i18n="backHome">← Back to home</button>
-          <div class="step-tag" data-i18n="buildTag">Sustainable Building Plan</div>
-          <h1 data-i18n="buildTitle">Plan every system of a sustainable home</h1>
-          <p data-i18n="buildIntro">Choose a house system, then select a material, device, or technology to see its essential sustainability information.</p>
+          <div class="step-tag" data-i18n="buildTag">Material Explorer</div>
+          <h1 data-i18n="buildTitle">Explore the environmental impact of building materials</h1>
+          <p data-i18n="buildIntro">Choose a house system to explore materials and understand how their environmental impact, health considerations, performance, and prices differ.</p>
         </div>
         <div class="plan-breadcrumb" id="plan-breadcrumb"></div>
         <div class="plan-view-toolbar" aria-label="Display options" data-i18n-aria-label="viewOptions">
@@ -296,16 +295,9 @@
         </section>
       </section>
 
-      <section class="view inner-view article-view" data-view="carbon-article">
+      <section class="view inner-view learning-article-view" data-view="carbon-article">
         <button class="back-link" type="button" data-route="home" data-i18n="backHome">← Back to home</button>
-        <article class="article-shell">
-          <div class="step-tag" data-i18n="carbonArticleTag">Housing &amp; emissions</div>
-          <h1 data-i18n="carbonArticleTitle">Why do buildings and construction produce so much CO₂?</h1>
-          <div class="article-placeholder">
-            <span data-i18n="carbonArticleStatus">Article placeholder</span>
-            <p data-i18n="carbonArticlePlaceholder">Article content will be added here.</p>
-          </div>
-        </article>
+        <article id="carbon-article-content" class="learning-story" aria-labelledby="carbon-article-title"></article>
       </section>
       <section class="view inner-view learning-article-view" data-view="sustainable-housing">
         <button class="back-link" type="button" data-route="home" data-i18n="backHome">← Back to home</button>
@@ -386,6 +378,7 @@
     <script src="auth-config.js"></script>
     <script src="auth.js"></script>
     <script src="learning-article.js"></script>
+    <script src="carbon-article.js"></script>
     <script src="home-manifesto.js"></script>
     <script src="app.js"></script>
   </body>

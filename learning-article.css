@@ -45,7 +45,21 @@
 .learning-sources li { margin-bottom: 18px; padding-left: 6px; }
 .learning-sources li p { margin: 6px 0 0; font-size: 14px; color: #596b61; }
 .learning-sources .learning-methods { margin-top: 28px; font-size: 14px; line-height: 1.7; color: #596b61; }
+/* The carbon article shares the existing story typography; only its figures are new. */
+.carbon-article-photo { max-width: 760px; margin: 0 auto 42px; }
+.carbon-article-photo img { display: block; width: 100%; height: auto; }
+.carbon-article-photo figcaption { margin-top: 12px; font-size: 13px; line-height: 1.65; color: #4d6055; }
+.carbon-life-body { padding-block: 22px; }
+.carbon-life-body h4 { margin: 0 0 14px; font-size: 18px; color: #173d36; }
+.carbon-life-stages { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; list-style: none; padding: 0; margin: 0; }
+.carbon-life-stages li { border-top: 2px solid #246b59; padding-top: 13px; }
+.carbon-life-stages strong { display: block; font-size: 16px; line-height: 1.4; }
+.carbon-life-stages span { display: block; font-size: 14px; line-height: 1.5; margin-top: 8px; }
+.carbon-operation { margin-top: 24px; border-left: 3px solid #b87b42; padding-left: 18px; }
+.carbon-operation p { font-size: 16px; line-height: 1.6; margin-bottom: 0; }
 @media (max-width: 650px) {
+  .carbon-article-photo { margin-bottom: 28px; }
+  .carbon-life-stages { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px 16px; }
   .learning-story { padding-top: 15px; }
   .learning-story-header { margin-bottom: 30px; }
   .learning-prose { font-size: 18px; line-height: 1.75; }

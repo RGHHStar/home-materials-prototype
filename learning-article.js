@@ -1,12 +1,14 @@
 /* Article content and chart data are deliberately separate from the planning catalogue.
    Data sources and qualifications are visible beside each chart and in the references. */
 const housingLearningSources = {
-  energy: 'https://energy-information.canada.ca/en/energy-facts/energy-efficiency',
-  envelope: 'https://natural-resources.canada.ca/energy-efficiency/home-energy-efficiency/keeping-heat-section-2-your-house-works',
-  trial: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1808149/',
-  health: 'https://www.who.int/publications/i/item/9789241550376',
-  materials: 'https://www.nature.com/articles/s41467-023-40302-0',
-  climate: 'https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-9/'
+  "energy": "https://energy-information.canada.ca/en/energy-facts/energy-efficiency",
+  "envelope": "https://natural-resources.canada.ca/energy-efficiency/home-energy-efficiency/keeping-heat-section-2-your-house-works",
+  "trial": "https://doi.org/10.1136/bmj.39070.573032.80",
+  "health": "https://www.who.int/publications/i/item/9789241550376",
+  "materials": "https://doi.org/10.1038/s41467-023-40302-0",
+  "climate": "https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-9/",
+  "lca": "https://publications.gc.ca/site/fra/9.908801/publication.html",
+  "embodied": "https://www.tbs-sct.canada.ca/pol/doc-eng.aspx?id=32814"
 };
 
 function housingSource(key, label) {
@@ -14,91 +16,167 @@ function housingSource(key, label) {
 }
 
 const housingLearningCopy = {
-  en: {
-    eyebrow: 'Learning / Sustainable housing',
-    title: 'Why is sustainable housing important?',
-    deck: 'Sustainable housing connects environmental responsibility with health, comfort and long-term affordability.',
-    meta: 'EverDwell editorial · 7 September 2026 · 6-minute read',
-    introduction: `<p>Housing provides essential shelter, but its performance also influences energy demand, indoor conditions and household expenditure. Poor heat retention, for example, can increase the energy required to maintain comfortable temperatures. A single building characteristic can therefore have environmental, social and economic consequences.</p><p>Sustainable housing considers these dimensions together. It aims to provide safe, healthy and affordable living conditions while limiting resource consumption and environmental impacts throughout a building’s life.</p><p>Its importance cannot be assessed through carbon emissions alone. Energy efficiency, occupant well-being, material durability and long-term costs are interconnected. Examining these relationships helps explain why sustainable housing is relevant both to environmental protection and to quality of life.</p>`,
-    energyTitle: 'Energy efficiency and thermal comfort',
-    energyText: `<p>In Canada, space and water heating accounted for <strong>79% of residential energy consumption in 2023</strong>. Keeping rooms warm and supplying hot water dominate the household energy picture. ${housingSource('energy', '[1]')}</p>`,
-    energyAfter: `<p>Improving thermal comfort does not necessarily require greater heating capacity. Insulation slows heat transfer, and air sealing reduces unwanted leakage. The walls, roof, windows and foundation form the <em>building envelope</em>: the boundary between indoors and outdoors. Improving its performance can reduce the energy needed to maintain comfortable indoor temperatures. ${housingSource('envelope', '[2]')}</p><p>Lower purchased energy consumption can reduce operating costs, although savings depend on energy prices, building characteristics and patterns of use. Improvements also require an initial investment. A meaningful cost comparison therefore considers purchase, operation and maintenance over time, rather than the purchase price alone.</p>`,
-    energyChartTitle: 'Where does home energy go?',
-    energyChartSub: 'Canada · Residential energy consumption · 2023',
-    heating: 'Space and water heating', other: 'All other uses',
-    heatingNote: 'Warm rooms and hot water', otherNote: 'Appliances, lighting and cooling',
-    energyAlt: 'Space and water heating: 79% of Canadian residential energy use. Other uses: 21%.',
-    energyCaption: `Figure 1. ${housingSource('energy', 'Canadian Centre for Energy Information, Energy Fact Book, Spring 2026')}. Other uses = 100% − 79%. This is energy use, not the share of carbon emissions.`,
-    healthTitle: 'Housing quality and occupant health',
-    healthText: `<p>The World Health Organization treats housing as a health issue, addressing cold, overheating, crowding, accessibility and other hazards. Indoor environmental conditions are therefore an important consideration in housing design and assessment, rather than an optional aspect of comfort. ${housingSource('health', '[3]')}</p><p>A New Zealand randomised study of <strong>1,350 households</strong> tested an insulation retrofit package. The intervention group used less energy and had slightly warmer bedrooms. This was a study of selected low-income communities, not a prediction for Canadian homes. ${housingSource('trial', '[4]')}</p>`,
-    trialChartTitle: 'Less energy. Warmer bedrooms.',
-    trialChartSub: 'New Zealand insulation trial · Published 2007',
-    trialControl: 'Uninsulated comparison homes', trialInsulated: 'Homes receiving insulation',
-    trialAxis: 'Relative household energy use · Comparison group = 100',
-    trialCallout: '+0.5°C', trialCalloutLabel: 'winter bedroom temperature',
-    trialAlt: 'Comparison homes: energy index 100. Insulated homes: adjusted energy index 81, with a 95% confidence interval of 72 to 91. Winter bedrooms were 0.5 degrees Celsius warmer.',
-    trialCaption: `Figure 2. ${housingSource('trial', 'Howden-Chapman and colleagues, BMJ (2007)')}. Energy use adjusted for baseline usage; the line marks the 95% confidence interval (72–91). Study results, not guaranteed savings.`,
-    healthAfter: `<p>These findings illustrate that lower energy consumption and improved indoor conditions can occur together. They do not establish a uniform outcome for all insulation projects; the results must be interpreted in their study context.</p><p>Increased airtightness alone does not establish that a home is healthier. Moisture control and appropriate ventilation must be considered alongside heat retention to manage indoor air and humidity. ${housingSource('envelope', '[2]')}</p>`,
-    materialsTitle: 'Resource use and material service life',
-    materialsText: `<p>A home’s environmental impact extends beyond its operating energy. Concrete, timber, glass and finishes also require resources. Products with a low initial cost may require frequent replacement, while longer-lasting alternatives may reduce repeated material demand.</p><p>Research on concrete decarbonisation examines material production, structural design and service life together. In its modelling, extending useful life can reduce demand for new cement-based materials. This is not proof that every durable product has the lowest footprint, but it explains why longevity belongs in an environmental comparison. ${housingSource('materials', '[5]')}</p><p>Flooring illustrates this distinction. Its raw materials should be evaluated alongside moisture resistance, repairability and suitability for the intended space. Premature failure can create additional replacement needs. An environmental comparison should therefore consider performance over the product’s service life, rather than relying solely on an environmental label.</p>`,
-    futureTitle: 'Long-term performance and affordability',
-    futureText: `<p>Major building components, including walls and roofs, represent long-term decisions. The IPCC warns that low-ambition building choices can lock in emissions for decades. It also links better buildings with well-being and adaptation, not only carbon reduction. ${housingSource('climate', '[6]')}</p><p>Sustainable housing therefore involves equity as well as technology. A low purchase price does not necessarily imply affordable operating costs. Tenants may be responsible for energy bills while having limited authority to replace windows or heating equipment. Housing decisions should account for how costs and benefits are distributed, as well as whether improvements are financially accessible.</p>`,
-    conclusionTitle: 'Integrating environmental and social objectives',
-    conclusion: `<p>Taken together, the evidence supports an integrated approach to sustainable housing. Heat retention, ventilation, energy supply, material durability and affordability should be assessed as interacting parts of a building, rather than as isolated features.</p><p>For existing housing, this involves identifying performance limitations and evaluating appropriate improvements. For new housing, it requires considering these relationships during design. Both approaches share the objective of providing safe, comfortable living conditions while reducing avoidable resource use over the building’s lifetime.</p><p class="learning-closing">The value of sustainable housing lies in its capacity to reduce environmental pressures while supporting occupant well-being and long-term affordability.</p>`,
-    sourcesTitle: 'Sources & further reading',
-    sourceLabels: [
-      ['energy', 'Canadian Centre for Energy Information (2026). Energy Fact Book, Spring 2026: Energy efficiency.', 'Canadian data for Figure 1.'],
-      ['envelope', 'Natural Resources Canada. Keeping the Heat In: How your house works.', 'Heat flow, the building envelope and ventilation.'],
-      ['health', 'World Health Organization (2018). WHO Housing and health guidelines.', 'Evidence-based guidance on housing conditions and health.'],
-      ['trial', 'Howden-Chapman et al. (2007). Effect of insulating existing houses on health inequality. BMJ, 334, 460.', 'Randomised community study; Figure 2 uses reported adjusted results.'],
-      ['materials', 'Olsson, Miller & Alexander (2023). Near-term pathways for decarbonizing global concrete production. Nature Communications, 14, 4574.', 'Material efficiency, design and service-life modelling.'],
-      ['climate', 'IPCC (2022). Climate Change 2022: Mitigation of Climate Change, Chapter 9: Buildings.', 'Long-term building decisions, well-being and climate mitigation.']
+  "en": {
+    "eyebrow": "Learning / Sustainable housing",
+    "title": "Why is sustainable housing important?",
+    "deck": "Sustainable housing uses materials, energy and design to support health, comfort and affordability over the life of a home.",
+    "meta": "EverDwell editorial · 7 September 2026 · 6-minute read",
+    "introduction": "<p>A home is not sustainable because it contains one product labelled “green.” Its performance emerges from a system: walls and windows influence heating demand; insulation and air sealing affect comfort and moisture; structural and finish materials shape repair and replacement. <a href=\"https://natural-resources.canada.ca/energy-efficiency/home-energy-efficiency/keeping-heat-section-2-your-house-works\" target=\"_blank\" rel=\"noopener noreferrer\">[2]</a> <a href=\"https://www.who.int/publications/i/item/9789241550376\" target=\"_blank\" rel=\"noopener noreferrer\">[3]</a> <a href=\"https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-9/\" target=\"_blank\" rel=\"noopener noreferrer\">[6]</a></p><p>Sustainable housing brings energy, health, material use, durability and affordability into the same decision. Meaningful comparisons must consider the job a product performs, how long it lasts and how it interacts with the home.</p>",
+    "energyTitle": "Energy efficiency begins with material performance",
+    "energyText": "<p>In Canada, space and water heating accounted for 79% of residential energy consumption in 2023. This is an energy-use statistic, not a carbon-emissions share, but it shows why the building envelope matters. Insulation slows heat transfer, air barriers reduce leakage, and windows connect thermal performance with daylight and ventilation. Together, the envelope influences how much energy a home needs for comfort. <a href=\"https://energy-information.canada.ca/en/energy-facts/energy-efficiency\" target=\"_blank\" rel=\"noopener noreferrer\">[1]</a> <a href=\"https://natural-resources.canada.ca/energy-efficiency/home-energy-efficiency/keeping-heat-section-2-your-house-works\" target=\"_blank\" rel=\"noopener noreferrer\">[2]</a></p>",
+    "energyAfter": "<p>Lower demand can reduce purchased energy, but no material guarantees a particular saving. Climate, installation, equipment and household behaviour affect the result. Low-cost insulation that performs poorly after moisture damage may be less economical than a better-suited product.</p>",
+    "energyChartTitle": "Where does home energy go?",
+    "energyChartSub": "Canada · Residential energy consumption · 2023",
+    "heating": "Space and water heating",
+    "other": "All other uses",
+    "heatingNote": "Warm rooms and hot water",
+    "otherNote": "Appliances, lighting and cooling",
+    "energyAlt": "Space and water heating: 79% of Canadian residential energy use. Other uses: 21%.",
+    "energyCaption": "Figure 1. <a href=\"https://energy-information.canada.ca/en/energy-facts/energy-efficiency\" target=\"_blank\" rel=\"noopener noreferrer\">Canadian Centre for Energy Information, Energy Fact Book, Spring 2026</a>. Other uses = 100% − 79%. This is energy use, not the share of carbon emissions.",
+    "healthTitle": "Healthy housing requires a balanced envelope",
+    "healthText": "<p>Energy efficiency and health can improve together. The World Health Organization’s housing guidelines connect indoor temperature, air quality and other housing conditions with health and quality of life. <a href=\"https://www.who.int/publications/i/item/9789241550376\" target=\"_blank\" rel=\"noopener noreferrer\">[3]</a> A New Zealand cluster-randomised trial involving 1,350 households gives more specific evidence: homes receiving an insulation package used less energy and had slightly warmer winter bedrooms than comparison homes. <a href=\"https://pubmed.ncbi.nlm.nih.gov/17324975/\" target=\"_blank\" rel=\"noopener noreferrer\">[4]</a></p>",
+    "trialChartTitle": "Less energy. Warmer bedrooms.",
+    "trialChartSub": "New Zealand insulation trial · Published 2007",
+    "trialControl": "Uninsulated comparison homes",
+    "trialInsulated": "Homes receiving insulation",
+    "trialAxis": "Relative household energy use · Comparison group = 100",
+    "trialCallout": "+0.5°C",
+    "trialCalloutLabel": "winter bedroom temperature",
+    "trialAlt": "Comparison homes: energy index 100. Insulated homes: adjusted energy index 81, with a 95% confidence interval of 72 to 91. Winter bedrooms were 0.5 degrees Celsius warmer.",
+    "trialCaption": "Figure 2. <a href=\"https://doi.org/10.1136/bmj.39070.573032.80\" target=\"_blank\" rel=\"noopener noreferrer\">Howden-Chapman and colleagues, BMJ (2007)</a>. Energy use is adjusted for baseline usage; the interval is 72–91. These are study results, not guaranteed savings for another home.",
+    "healthAfter": "<p>The trial shows that envelope improvements can produce co-benefits, but its effect size should not be transferred directly to Canadian homes. It involved low-income New Zealand communities and uninsulated homes where at least one resident had respiratory symptoms or a history of them. It also tested a package rather than every insulation product. Airtightness needs ventilation and moisture control. Holding heat inside while allowing pollutants or humidity to accumulate would exchange one problem for another. <a href=\"https://natural-resources.canada.ca/energy-efficiency/home-energy-efficiency/keeping-heat-section-2-your-house-works\" target=\"_blank\" rel=\"noopener noreferrer\">[2]</a></p>",
+    "materialsTitle": "Material impacts continue beyond the utility bill",
+    "materialsText": "<p>A home’s environmental impact begins before occupancy. Concrete, timber, glass, insulation and finishes require raw materials, manufacturing and transport. Maintenance, replacement and disposal add further impacts. Under the scenarios modelled in a global concrete study, the amount used, structural design and service life all affected future demand and emissions. Durability alone does not prove that a product has the lowest footprint. <a href=\"https://doi.org/10.1038/s41467-023-40302-0\" target=\"_blank\" rel=\"noopener noreferrer\">[5]</a></p><p>The same reasoning applies to everyday choices. A floor should be judged by the quantity required, expected life, repairability and suitability for moisture and wear. Insulation should be compared at the same thermal performance. A window with higher manufacturing impacts may still reduce whole-life impacts if it delivers sufficient energy savings for long enough; the result depends on climate, orientation, installation and the local energy supply.</p><p>Canada’s whole-building life-cycle guidance aims to make these comparisons more consistent by aligning boundaries, material quantities and assumptions. <a href=\"https://publications.gc.ca/site/fra/9.908801/publication.html\" target=\"_blank\" rel=\"noopener noreferrer\">[7]</a> Environmental Product Declarations can disclose a product’s modelled impacts, and Canada’s federal embodied-carbon standard uses EPDs or project life-cycle assessment to document certain structural materials. <a href=\"https://www.tbs-sct.canada.ca/pol/doc-eng.aspx?id=32814\" target=\"_blank\" rel=\"noopener noreferrer\">[8]</a> An EPD is evidence, not a green award. Two products should be compared only when they provide equivalent service and their data cover compatible life-cycle stages.</p>",
+    "futureTitle": "Affordability and access are part of sustainability",
+    "futureText": "<p>Long-term performance changes the meaning of cost. Purchase price matters, but so do energy bills, maintenance, repair and replacement. Some improvements may lower operating costs; others may be worthwhile mainly because they improve comfort, resilience or health. Claims that every upgrade “pays for itself” hide differences in climate, financing, energy prices and the condition of the home.</p><p>Costs and benefits may also fall on different people. Tenants may pay energy bills without controlling upgrades; owners may pay for work while occupants receive the comfort benefit. Sustainable housing therefore includes access and distribution. The WHO and IPCC connect better housing with health, well-being and climate resilience while recognising that solutions must fit local conditions. <a href=\"https://www.who.int/publications/i/item/9789241550376\" target=\"_blank\" rel=\"noopener noreferrer\">[3]</a> <a href=\"https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-9/\" target=\"_blank\" rel=\"noopener noreferrer\">[6]</a></p>",
+    "conclusionTitle": "What the evidence supports, and what it implies",
+    "conclusion": "<p>The evidence directly supports several conclusions: envelope performance can reduce heating demand; housing conditions affect health; material quantity and service life influence environmental impacts; and fair comparisons require consistent functions and life-cycle boundaries. It does not identify one universally sustainable material or predict the outcome of a particular renovation.</p><p>A broader conclusion follows from combining these findings. The most sustainable choice is the material-and-design solution that meets the home’s safety, health and performance needs with the lowest credible whole-life burden at a cost people can carry. This is an evidence-based synthesis rather than a result reported by one source. Better local product data, realistic service-life estimates and clearer evidence about maintenance and occupant behaviour are still needed. Sustainable housing is important because it makes those relationships visible before a short-term choice becomes a decades-long consequence.</p>",
+    "sourcesTitle": "Sources & further reading",
+    "sourceLabels": [
+      [
+        "energy",
+        "Canadian Centre for Energy Information (2026). Energy Fact Book, Spring 2026: Energy efficiency.",
+        "Canadian data for Figure 1."
+      ],
+      [
+        "envelope",
+        "Natural Resources Canada. Keeping the Heat In: How your house works.",
+        "Heat flow, the building envelope, moisture and ventilation."
+      ],
+      [
+        "health",
+        "World Health Organization (2018). WHO Housing and health guidelines.",
+        "Evidence-based guidance on housing conditions and health."
+      ],
+      [
+        "trial",
+        "Howden-Chapman et al. (2007). Effect of insulating existing houses on health inequality. BMJ, 334, 460.",
+        "Cluster-randomised community study; Figure 2 uses reported adjusted results."
+      ],
+      [
+        "materials",
+        "Olsson, Miller & Alexander (2023). Near-term pathways for decarbonizing global concrete production. Nature Communications, 14, 4574.",
+        "Material efficiency, structural design and service-life modelling."
+      ],
+      [
+        "climate",
+        "IPCC (2022). Climate Change 2022: Mitigation of Climate Change, Chapter 9: Buildings.",
+        "Long-term building decisions, well-being and climate mitigation."
+      ],
+      [
+        "lca",
+        "National Research Council Canada (2022). National guidelines for whole-building life cycle assessment.",
+        "Consistent scope, quantities and assumptions for building life-cycle comparisons."
+      ],
+      [
+        "embodied",
+        "Treasury Board of Canada Secretariat. Standard on Embodied Carbon in Construction.",
+        "Canadian federal requirements for verified embodied-carbon disclosure."
+      ]
     ],
-    methods: 'About this article: an educational synthesis of the sources above, not a new experiment or a home-specific assessment. Charts are redrawn from published data. Examples illustrate the reasoning; outcomes depend on the home and local conditions.',
-    back: 'Back to home'
+    "methods": "About this article: an educational synthesis of the sources above, not a new experiment or a home-specific assessment. Charts are redrawn from published data. Examples illustrate the reasoning; outcomes depend on the home and local conditions.",
+    "back": "Back to home"
   },
-  fr: {
-    eyebrow: 'Comprendre / Habitat durable',
-    title: 'Pourquoi l’habitat durable est-il important ?',
-    deck: 'L’habitat durable associe responsabilité environnementale, santé, confort et accessibilité financière à long terme.',
-    meta: 'Rédaction EverDwell · 7 septembre 2026 · Lecture de 7 minutes',
-    introduction: `<p>Le logement fournit un abri essentiel, mais sa performance influence aussi la demande énergétique, les conditions intérieures et les dépenses des ménages. Une mauvaise conservation de la chaleur, par exemple, peut augmenter l’énergie nécessaire au maintien de températures confortables. Une même caractéristique du bâtiment peut donc avoir des conséquences environnementales, sociales et économiques.</p><p>L’habitat durable considère ces dimensions conjointement. Il vise à offrir des conditions de vie sûres, saines et abordables tout en limitant la consommation de ressources et les impacts environnementaux pendant la durée de vie du bâtiment.</p><p>Son importance ne peut pas être évaluée uniquement à partir des émissions de carbone. L’efficacité énergétique, le bien-être des occupants, la durabilité des matériaux et les coûts à long terme sont liés. Examiner ces relations permet de comprendre le rôle de l’habitat durable dans la protection de l’environnement et la qualité de vie.</p>`,
-    energyTitle: 'Efficacité énergétique et confort thermique',
-    energyText: `<p>Au Canada, le chauffage des locaux et de l’eau représentait <strong>79 % de la consommation énergétique résidentielle en 2023</strong>. Chauffer les pièces et fournir de l’eau chaude constituent donc l’essentiel des besoins énergétiques du logement. ${housingSource('energy', '[1]')}</p>`,
-    energyAfter: `<p>Améliorer le confort thermique ne nécessite pas forcément une capacité de chauffage supérieure. L’isolation ralentit les transferts de chaleur et l’étanchéisation réduit les fuites d’air indésirables. Les murs, le toit, les fenêtres et les fondations forment l’<em>enveloppe du bâtiment</em>, la limite entre l’intérieur et l’extérieur. Améliorer sa performance peut réduire l’énergie nécessaire au maintien de températures intérieures confortables. ${housingSource('envelope', '[2]')}</p><p>Une consommation moindre d’énergie achetée peut réduire les dépenses de fonctionnement, mais les économies dépendent des tarifs, des caractéristiques du bâtiment et de son utilisation. Les améliorations nécessitent aussi un investissement initial. Une comparaison pertinente considère donc l’achat, le fonctionnement et l’entretien dans le temps, plutôt que le seul prix d’achat.</p>`,
-    energyChartTitle: 'Où va l’énergie de nos logements ?',
-    energyChartSub: 'Canada · Consommation énergétique résidentielle · 2023',
-    heating: 'Chauffage des locaux et de l’eau', other: 'Autres usages',
-    heatingNote: 'Des pièces chauffées et de l’eau chaude', otherNote: 'Appareils, éclairage et climatisation',
-    energyAlt: 'Chauffage des locaux et de l’eau : 79 % de l’énergie résidentielle au Canada. Autres usages : 21 %.',
-    energyCaption: `Figure 1. ${housingSource('energy', 'Centre canadien d’information sur l’énergie, Cahier d’information sur l’énergie, printemps 2026')}. Autres usages = 100 % − 79 %. Il s’agit d’énergie consommée, et non de la part des émissions de carbone.`,
-    healthTitle: 'Qualité du logement et santé des occupants',
-    healthText: `<p>L’Organisation mondiale de la Santé considère le logement comme un enjeu de santé : froid, surchauffe, surpeuplement, accessibilité et autres risques. Les conditions environnementales intérieures constituent donc un critère important de conception et d’évaluation du logement, et non un simple élément facultatif de confort. ${housingSource('health', '[3]')}</p><p>Une étude randomisée néo-zélandaise portant sur <strong>1 350 ménages</strong> a évalué un ensemble de travaux d’isolation. Le groupe bénéficiaire consommait moins d’énergie et disposait de chambres légèrement plus chaudes. Ces résultats concernent des collectivités à faible revenu sélectionnées pour l’étude ; ils ne prédisent pas les résultats au Canada. ${housingSource('trial', '[4]')}</p>`,
-    trialChartTitle: 'Moins d’énergie. Des chambres plus chaudes.',
-    trialChartSub: 'Étude sur l’isolation en Nouvelle-Zélande · Publication en 2007',
-    trialControl: 'Logements témoins non isolés', trialInsulated: 'Logements ayant reçu une isolation',
-    trialAxis: 'Consommation énergétique relative · Groupe témoin = 100',
-    trialCallout: '+0,5 °C', trialCalloutLabel: 'température des chambres en hiver',
-    trialAlt: 'Logements témoins : indice énergétique 100. Logements isolés : indice ajusté 81, avec un intervalle de confiance à 95 % de 72 à 91. Les chambres étaient plus chaudes de 0,5 degré Celsius en hiver.',
-    trialCaption: `Figure 2. ${housingSource('trial', 'Howden-Chapman et ses collègues, BMJ (2007)')}. Consommation ajustée selon l’usage initial ; le trait indique l’intervalle de confiance à 95 % (72–91). Résultats d’étude, et non économies garanties.`,
-    healthAfter: `<p>Ces résultats montrent qu’une consommation énergétique moindre et de meilleures conditions intérieures peuvent être obtenues simultanément. Ils n’établissent pas un résultat uniforme pour tous les travaux d’isolation et doivent être interprétés dans le contexte de l’étude.</p><p>Une étanchéité accrue ne suffit pas à établir qu’un logement est plus sain. La maîtrise de l’humidité et une ventilation appropriée doivent être considérées conjointement avec la conservation de la chaleur pour gérer l’air intérieur et l’humidité. ${housingSource('envelope', '[2]')}</p>`,
-    materialsTitle: 'Utilisation des ressources et durée de service des matériaux',
-    materialsText: `<p>L’impact environnemental d’un logement ne se limite pas à l’énergie consommée pendant son utilisation. Le béton, le bois, le verre et les finitions nécessitent aussi des ressources. Des produits peu coûteux à l’achat peuvent exiger des remplacements fréquents, tandis que des solutions plus durables peuvent réduire ces besoins répétés.</p><p>Des recherches sur la décarbonation du béton étudient ensemble la production des matériaux, la conception des structures et leur durée de service. Dans leurs modèles, prolonger la durée d’utilisation peut réduire la demande de nouveaux matériaux à base de ciment. Cela ne prouve pas que tout produit résistant possède l’empreinte la plus faible, mais explique pourquoi la longévité compte. ${housingSource('materials', '[5]')}</p><p>Les revêtements de sol illustrent cette distinction. Leurs matières premières doivent être évaluées avec leur résistance à l’humidité, leur réparabilité et leur adaptation à l’espace prévu. Une défaillance prématurée peut entraîner des remplacements supplémentaires. La comparaison environnementale doit donc considérer la performance pendant la durée de service du produit, plutôt que sa seule étiquette environnementale.</p>`,
-    futureTitle: 'Performance et accessibilité financière à long terme',
-    futureText: `<p>Les principaux éléments du bâtiment, notamment les murs et les toits, représentent des choix à long terme. Le GIEC souligne que des choix insuffisamment ambitieux peuvent maintenir des émissions pendant des décennies. Il relie aussi l’amélioration des bâtiments au bien-être et à l’adaptation, pas uniquement à la réduction du carbone. ${housingSource('climate', '[6]')}</p><p>L’habitat durable implique donc l’équité autant que la technologie. Un prix d’achat faible ne garantit pas des coûts de fonctionnement abordables. Les locataires peuvent payer les factures d’énergie tout en ayant peu de pouvoir sur le remplacement des fenêtres ou du chauffage. Les décisions doivent tenir compte de la répartition des coûts et des bénéfices, ainsi que de l’accessibilité financière des améliorations.</p>`,
-    conclusionTitle: 'Intégrer les objectifs environnementaux et sociaux',
-    conclusion: `<p>Pris ensemble, les résultats appuient une approche intégrée de l’habitat durable. Conservation de la chaleur, ventilation, approvisionnement énergétique, durabilité des matériaux et accessibilité financière doivent être évalués comme des composantes liées du bâtiment, plutôt que comme des caractéristiques isolées.</p><p>Pour le parc existant, cela implique de repérer les limites de performance et d’évaluer les améliorations appropriées. Pour les nouveaux logements, ces relations doivent être considérées dès la conception. Les deux approches visent des conditions de vie sûres et confortables tout en réduisant la consommation évitable de ressources pendant la durée de vie du bâtiment.</p><p class="learning-closing">L’intérêt de l’habitat durable réside dans sa capacité à réduire les pressions environnementales tout en favorisant le bien-être des occupants et l’accessibilité financière à long terme.</p>`,
-    sourcesTitle: 'Sources et lectures complémentaires',
-    sourceLabels: [
-      ['energy', 'Centre canadien d’information sur l’énergie (2026). Cahier d’information sur l’énergie, printemps 2026 : efficacité énergétique.', 'Données canadiennes utilisées pour la figure 1.'],
-      ['envelope', 'Ressources naturelles Canada. Emprisonnons la chaleur : le fonctionnement de votre maison.', 'Transferts de chaleur, enveloppe et ventilation.'],
-      ['health', 'Organisation mondiale de la Santé (2018). Lignes directrices relatives au logement et à la santé.', 'Recommandations fondées sur les données probantes.'],
-      ['trial', 'Howden-Chapman et ses collègues (2007). Effets de l’isolation des logements existants sur les inégalités de santé. BMJ, 334, 460.', 'Étude communautaire randomisée ; résultats ajustés pour la figure 2.'],
-      ['materials', 'Olsson, Miller et Alexander (2023). Voies de décarbonation à court terme de la production mondiale de béton. Nature Communications, 14, 4574.', 'Efficacité matérielle, conception et modélisation de la durée de service.'],
-      ['climate', 'GIEC (2022). Changement climatique 2022 : atténuation du changement climatique, chapitre 9 : bâtiments.', 'Choix à long terme, bien-être et atténuation.']
+  "fr": {
+    "eyebrow": "Comprendre / Habitat durable",
+    "title": "Pourquoi l’habitat durable est-il important ?",
+    "deck": "L’habitat durable mobilise les matériaux, l’énergie et la conception pour favoriser la santé, le confort et l’accessibilité financière pendant toute la vie d’un logement.",
+    "meta": "Rédaction EverDwell · 7 septembre 2026 · Lecture de 7 minutes",
+    "introduction": "<p>Un logement n’est pas durable simplement parce qu’il contient un produit étiqueté « vert ». Sa performance résulte d’un système : les murs et les fenêtres influencent les besoins de chauffage ; l’isolation et l’étanchéité à l’air agissent sur le confort et l’humidité ; les matériaux de structure et de finition déterminent les besoins de réparation et de remplacement. <a href=\"https://natural-resources.canada.ca/energy-efficiency/home-energy-efficiency/keeping-heat-section-2-your-house-works\" target=\"_blank\" rel=\"noopener noreferrer\">[2]</a> <a href=\"https://www.who.int/publications/i/item/9789241550376\" target=\"_blank\" rel=\"noopener noreferrer\">[3]</a> <a href=\"https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-9/\" target=\"_blank\" rel=\"noopener noreferrer\">[6]</a></p><p>L’habitat durable réunit l’énergie, la santé, l’utilisation des matériaux, la durabilité et l’accessibilité financière dans une même décision. Une comparaison pertinente doit tenir compte de la fonction d’un produit, de sa durée de service et de ses interactions avec le logement.</p>",
+    "energyTitle": "L’efficacité énergétique commence par la performance des matériaux",
+    "energyText": "<p>Au Canada, le chauffage des locaux et de l’eau représentait 79 % de la consommation énergétique résidentielle en 2023. Cette statistique porte sur l’énergie consommée, et non sur la part des émissions de carbone, mais elle montre l’importance de l’enveloppe du bâtiment. L’isolation ralentit les transferts de chaleur, les pare-air réduisent les fuites et les fenêtres associent performance thermique, lumière naturelle et ventilation. Ensemble, les éléments de l’enveloppe influencent la quantité d’énergie nécessaire au confort. <a href=\"https://energy-information.canada.ca/en/energy-facts/energy-efficiency\" target=\"_blank\" rel=\"noopener noreferrer\">[1]</a> <a href=\"https://natural-resources.canada.ca/energy-efficiency/home-energy-efficiency/keeping-heat-section-2-your-house-works\" target=\"_blank\" rel=\"noopener noreferrer\">[2]</a></p>",
+    "energyAfter": "<p>Une demande moindre peut réduire l’énergie achetée, mais aucun matériau ne garantit une économie précise. Le climat, la pose, les équipements et les habitudes du ménage influencent le résultat. Un isolant peu coûteux dont la performance se dégrade sous l’effet de l’humidité peut être moins économique qu’un produit mieux adapté.</p>",
+    "energyChartTitle": "Où va l’énergie de nos logements ?",
+    "energyChartSub": "Canada · Consommation énergétique résidentielle · 2023",
+    "heating": "Chauffage des locaux et de l’eau",
+    "other": "Autres usages",
+    "heatingNote": "Des pièces chauffées et de l’eau chaude",
+    "otherNote": "Appareils, éclairage et climatisation",
+    "energyAlt": "Chauffage des locaux et de l’eau : 79 % de l’énergie résidentielle au Canada. Autres usages : 21 %.",
+    "energyCaption": "Figure 1. <a href=\"https://energy-information.canada.ca/en/energy-facts/energy-efficiency\" target=\"_blank\" rel=\"noopener noreferrer\">Centre canadien d’information sur l’énergie, Cahier d’information sur l’énergie, printemps 2026</a>. Autres usages = 100 % − 79 %. Il s’agit d’énergie consommée, et non de la part des émissions de carbone.",
+    "healthTitle": "Un habitat sain exige une enveloppe équilibrée",
+    "healthText": "<p>L’efficacité énergétique et la santé peuvent s’améliorer ensemble. Les lignes directrices de l’Organisation mondiale de la Santé sur le logement relient la température intérieure, la qualité de l’air et d’autres conditions de logement à la santé et à la qualité de vie. <a href=\"https://www.who.int/publications/i/item/9789241550376\" target=\"_blank\" rel=\"noopener noreferrer\">[3]</a> Un essai néo-zélandais randomisé par grappes, portant sur 1 350 ménages, apporte des éléments plus précis : les logements ayant bénéficié d’un ensemble de travaux d’isolation consommaient moins d’énergie et leurs chambres étaient légèrement plus chaudes en hiver que celles des logements témoins. <a href=\"https://pubmed.ncbi.nlm.nih.gov/17324975/\" target=\"_blank\" rel=\"noopener noreferrer\">[4]</a></p>",
+    "trialChartTitle": "Moins d’énergie. Des chambres plus chaudes.",
+    "trialChartSub": "Étude sur l’isolation en Nouvelle-Zélande · Publication en 2007",
+    "trialControl": "Logements témoins non isolés",
+    "trialInsulated": "Logements ayant reçu une isolation",
+    "trialAxis": "Consommation énergétique relative · Groupe témoin = 100",
+    "trialCallout": "+0,5 °C",
+    "trialCalloutLabel": "température des chambres en hiver",
+    "trialAlt": "Logements témoins : indice énergétique 100. Logements isolés : indice ajusté 81, avec un intervalle de confiance à 95 % de 72 à 91. Les chambres étaient plus chaudes de 0,5 degré Celsius en hiver.",
+    "trialCaption": "Figure 2. <a href=\"https://doi.org/10.1136/bmj.39070.573032.80\" target=\"_blank\" rel=\"noopener noreferrer\">Howden-Chapman et ses collègues, BMJ (2007)</a>. La consommation énergétique est ajustée selon l’usage initial ; l’intervalle est de 72 à 91. Il s’agit de résultats d’étude, et non d’économies garanties pour un autre logement.",
+    "healthAfter": "<p>L’essai montre que l’amélioration de l’enveloppe peut apporter plusieurs bénéfices, mais l’ampleur de ses effets ne doit pas être transposée directement aux logements canadiens. Il concernait des collectivités néo-zélandaises à faible revenu et des logements non isolés où au moins un occupant présentait des symptômes respiratoires ou en avait déjà présenté. Il évaluait également un ensemble de travaux, et non chaque produit isolant. L’étanchéité à l’air doit s’accompagner d’une ventilation et d’une maîtrise de l’humidité. Retenir la chaleur tout en laissant s’accumuler les polluants ou l’humidité reviendrait à remplacer un problème par un autre. <a href=\"https://natural-resources.canada.ca/energy-efficiency/home-energy-efficiency/keeping-heat-section-2-your-house-works\" target=\"_blank\" rel=\"noopener noreferrer\">[2]</a></p>",
+    "materialsTitle": "Les impacts des matériaux dépassent la facture énergétique",
+    "materialsText": "<p>L’impact environnemental d’un logement commence avant son occupation. Le béton, le bois, le verre, l’isolation et les finitions nécessitent des matières premières, de la fabrication et du transport. L’entretien, le remplacement et l’élimination ajoutent d’autres impacts. Dans les scénarios modélisés par une étude mondiale sur le béton, les quantités utilisées, la conception des structures et leur durée de service influençaient toutes la demande et les émissions futures. La durabilité seule ne prouve pas qu’un produit possède l’empreinte la plus faible. <a href=\"https://doi.org/10.1038/s41467-023-40302-0\" target=\"_blank\" rel=\"noopener noreferrer\">[5]</a></p><p>Le même raisonnement s’applique aux choix courants. Un revêtement de sol doit être évalué selon la quantité nécessaire, sa durée de vie prévue, sa réparabilité et son adaptation à l’humidité et à l’usure. Les isolants doivent être comparés à performance thermique égale. Une fenêtre dont la fabrication a davantage d’impacts peut néanmoins réduire les impacts sur l’ensemble du cycle de vie si elle permet des économies d’énergie suffisantes pendant assez longtemps ; le résultat dépend du climat, de l’orientation, de la pose et de l’approvisionnement énergétique local.</p><p>Les lignes directrices canadiennes sur l’analyse du cycle de vie des bâtiments visent à rendre ces comparaisons plus cohérentes en harmonisant les périmètres, les quantités de matériaux et les hypothèses. <a href=\"https://publications.gc.ca/site/fra/9.908801/publication.html\" target=\"_blank\" rel=\"noopener noreferrer\">[7]</a> Les déclarations environnementales de produits peuvent présenter les impacts modélisés d’un produit, et la norme fédérale canadienne sur le carbone intrinsèque utilise ces déclarations ou une analyse du cycle de vie du projet pour documenter certains matériaux de structure. <a href=\"https://www.tbs-sct.canada.ca/pol/doc-eng.aspx?id=32814\" target=\"_blank\" rel=\"noopener noreferrer\">[8]</a> Une déclaration environnementale de produit constitue un élément d’information, pas un label écologique. Deux produits ne devraient être comparés que s’ils rendent un service équivalent et si leurs données couvrent des étapes compatibles du cycle de vie.</p>",
+    "futureTitle": "L’accessibilité financière et l’accès font partie de la durabilité",
+    "futureText": "<p>La performance à long terme change la manière d’évaluer les coûts. Le prix d’achat compte, mais les factures d’énergie, l’entretien, les réparations et le remplacement comptent aussi. Certaines améliorations peuvent réduire les dépenses de fonctionnement ; d’autres peuvent être utiles surtout parce qu’elles améliorent le confort, la résilience ou la santé. Affirmer que toute amélioration « s’autofinance » masque les différences de climat, de financement, de prix de l’énergie et d’état du logement.</p><p>Les coûts et les bénéfices peuvent aussi concerner des personnes différentes. Les locataires peuvent payer les factures d’énergie sans décider des améliorations ; les propriétaires peuvent financer les travaux tandis que les occupants bénéficient d’un meilleur confort. L’habitat durable inclut donc les questions d’accès et de répartition. L’OMS et le GIEC associent un meilleur logement à la santé, au bien-être et à la résilience climatique, tout en reconnaissant que les solutions doivent être adaptées aux conditions locales. <a href=\"https://www.who.int/publications/i/item/9789241550376\" target=\"_blank\" rel=\"noopener noreferrer\">[3]</a> <a href=\"https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-9/\" target=\"_blank\" rel=\"noopener noreferrer\">[6]</a></p>",
+    "conclusionTitle": "Ce que les données étayent et ce qu’elles impliquent",
+    "conclusion": "<p>Les données étayent directement plusieurs conclusions : la performance de l’enveloppe peut réduire les besoins de chauffage ; les conditions de logement influencent la santé ; la quantité de matériaux et leur durée de service influencent les impacts environnementaux ; et une comparaison équitable exige des fonctions et des périmètres de cycle de vie cohérents. Elles ne désignent pas un matériau universellement durable et ne prédisent pas le résultat d’une rénovation particulière.</p><p>Une conclusion plus générale découle du rapprochement de ces constats. Le choix le plus durable est la combinaison de matériaux et de conception qui répond aux besoins de sécurité, de santé et de performance du logement avec la charge environnementale la plus faible, évaluée de manière crédible sur l’ensemble du cycle de vie, à un coût que les personnes peuvent assumer. Il s’agit d’une synthèse fondée sur les données, et non d’un résultat rapporté par une seule source. De meilleures données locales sur les produits, des estimations réalistes de leur durée de service et des connaissances plus précises sur l’entretien et le comportement des occupants restent nécessaires. L’habitat durable est important parce qu’il rend ces relations visibles avant qu’un choix à court terme n’entraîne des conséquences pendant des décennies.</p>",
+    "sourcesTitle": "Sources et lectures complémentaires",
+    "sourceLabels": [
+      [
+        "energy",
+        "Centre canadien d’information sur l’énergie (2026). Cahier d’information sur l’énergie, printemps 2026 : efficacité énergétique.",
+        "Données canadiennes utilisées pour la figure 1."
+      ],
+      [
+        "envelope",
+        "Ressources naturelles Canada. Emprisonnons la chaleur : le fonctionnement de votre maison.",
+        "Transferts de chaleur, enveloppe du bâtiment, humidité et ventilation."
+      ],
+      [
+        "health",
+        "Organisation mondiale de la Santé (2018). Lignes directrices relatives au logement et à la santé.",
+        "Recommandations fondées sur les données probantes."
+      ],
+      [
+        "trial",
+        "Howden-Chapman et ses collègues (2007). Effets de l’isolation des logements existants sur les inégalités de santé. BMJ, 334, 460.",
+        "Étude communautaire randomisée par grappes ; la figure 2 utilise les résultats ajustés publiés."
+      ],
+      [
+        "materials",
+        "Olsson, Miller et Alexander (2023). Voies de décarbonation à court terme de la production mondiale de béton. Nature Communications, 14, 4574.",
+        "Efficacité matérielle, conception des structures et modélisation de la durée de service."
+      ],
+      [
+        "climate",
+        "GIEC (2022). Changement climatique 2022 : atténuation du changement climatique, chapitre 9 : bâtiments.",
+        "Choix à long terme, bien-être et atténuation."
+      ],
+      [
+        "lca",
+        "Conseil national de recherches Canada (2022). Lignes directrices nationales en matière d’analyse du cycle de vie de l’ensemble du bâtiment.",
+        "Cohérence des périmètres, des quantités et des hypothèses pour comparer les cycles de vie des bâtiments."
+      ],
+      [
+        "embodied",
+        "Secrétariat du Conseil du Trésor du Canada. Norme sur le carbone intrinsèque en construction.",
+        "Exigences fédérales canadiennes de divulgation vérifiée du carbone intrinsèque."
+      ]
     ],
-    methods: 'À propos : synthèse pédagogique des sources ci-dessus, et non nouvelle expérience ou évaluation d’un logement particulier. Graphiques réalisés à partir des données publiées. Les exemples illustrent le raisonnement ; les résultats dépendent du logement et du contexte local. Les liens donnent accès aux publications originales, dont certaines sont en anglais.',
-    back: 'Retour à l’accueil'
+    "methods": "À propos : synthèse pédagogique des sources ci-dessus, et non nouvelle expérience ou évaluation d’un logement particulier. Graphiques réalisés à partir des données publiées. Les exemples illustrent le raisonnement ; les résultats dépendent du logement et du contexte local. Les liens donnent accès aux publications originales, dont certaines sont en anglais.",
+    "back": "Retour à l’accueil"
   }
 };
 
