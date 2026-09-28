@@ -81,7 +81,7 @@ export async function handleAdmin(request,env){
         WHERE COALESCE((SELECT version FROM feedback_admin_state WHERE feedback_id=?),0)=?
         AND NOT EXISTS (SELECT 1 FROM feedback_mail WHERE feedback_id=? AND kind='reply' AND status IN ('pending','sending','unknown'))
         AND (SELECT COUNT(*) FROM feedback_mail WHERE feedback_id=? AND kind='reply' AND created_at>unixepoch()-86400)<10
-        ON CONFLICT DO NOTHING RETURNING id`,[id,body.id,body.requestId,recipient,`EverDwell - Reply to your feedback #${body.id}`,body.text,auth.user.id,body.id,body.version,body.id,body.id]);
+        ON CONFLICT DO NOTHING RETURNING id`,[id,body.id,body.requestId,recipient,'EverDwell - Reply to your feedback',body.text,auth.user.id,body.id,body.version,body.id,body.id]);
       if(!added.length){const raced=await publicMail(env.DB,id);if(raced&&raced.feedback_id===body.id&&raced.body===body.text)return response(200,{mail:await deliverMail(env.DB,env,id)});return response(409,{error:'reply_conflict'})}
       return response(200,{mail:await deliverMail(env.DB,env,id)});
     }
