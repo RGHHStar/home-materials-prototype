@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="learning-article.css" />
     <link rel="stylesheet" href="auth.css" />
+    <link rel="stylesheet" href="feedback.css" />
   </head>
   <body>
     <header class="site-header">
@@ -130,6 +131,51 @@
             </button>
           </div>
         </section>
+        <section class="home-feedback" id="home-feedback" aria-labelledby="home-feedback-title">
+          <div class="feedback-intro">
+            <span class="home-section-label dark" data-feedback-copy="eyebrow">Your perspective matters</span>
+            <h2 id="home-feedback-title" data-feedback-copy="title">Help shape a better EverDwell.</h2>
+            <p data-feedback-copy="intro">Something useful, something missing, or something we could do better? We’d love to hear from you.</p>
+          </div>
+          <div class="feedback-invitation">
+            <p data-feedback-copy="invitation">Your ideas can make this a more useful place to learn about sustainable housing.</p>
+            <button type="button" class="feedback-submit" data-route="feedback"><span data-feedback-copy="open">Share your feedback</span><span aria-hidden="true">↗</span></button>
+          </div>
+        </section>
+      </section>
+
+      <section class="view inner-view feedback-page" data-view="feedback" aria-labelledby="feedback-title">
+        <button type="button" class="back-link" data-route="home" data-i18n="backHome">← Back to home</button>
+        <div class="feedback-page-layout">
+          <div class="feedback-intro">
+            <span class="home-section-label dark" data-feedback-copy="pageEyebrow">Feedback</span>
+            <h1 id="feedback-title" data-feedback-copy="open">Share your feedback</h1>
+            <p data-feedback-copy="intro">Something useful, something missing, or something we could do better? We’d love to hear from you.</p>
+            <div class="feedback-private"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg><span data-feedback-copy="private">Private feedback. Never a public comment.</span></div>
+          </div>
+          <form id="feedback-form" class="feedback-form" novalidate>
+            <div class="feedback-fields">
+              <div><label for="feedback-type" data-feedback-copy="type">What would you like to share?</label><select id="feedback-type" name="category">
+                <option value="suggestion" data-feedback-copy="suggestion">A suggestion</option>
+                <option value="issue" data-feedback-copy="issue">A problem using the site</option>
+                <option value="correction" data-feedback-copy="correction">A content correction</option>
+                <option value="other" data-feedback-copy="other">Something else</option>
+              </select></div>
+              <div><label for="feedback-section" data-feedback-copy="section">Which part of EverDwell?</label><select id="feedback-section" name="section">
+                <option value="general" data-feedback-copy="general">The website in general</option>
+                <option value="assessment" data-feedback-copy="assessment">Home assessment</option>
+                <option value="materials" data-feedback-copy="materials">Material explorer</option>
+                <option value="design" data-feedback-copy="design">Interactive home design</option>
+                <option value="learning" data-feedback-copy="learning">Learning articles</option>
+              </select></div>
+            </div>
+            <label for="feedback-message" data-feedback-copy="message">Your feedback</label>
+            <textarea id="feedback-message" name="message" rows="6" maxlength="2000" minlength="10" required readonly aria-describedby="feedback-help feedback-count feedback-status" placeholder="Tell us what’s on your mind…"></textarea>
+            <div class="feedback-message-meta"><p id="feedback-help" data-feedback-copy="help">Please leave out passwords, addresses and other sensitive information.</p><span id="feedback-count">0 / 2,000</span></div>
+            <div class="feedback-actions"><button type="submit" class="feedback-submit"><span data-feedback-copy="submit">Send feedback</span><span aria-hidden="true">↗</span></button><p data-feedback-copy="preview">Preview only. Submissions are not being saved yet.</p></div>
+            <p id="feedback-status" class="feedback-status" role="status" aria-live="polite" hidden></p>
+          </form>
+        </div>
       </section>
 
       <section class="view inner-view" data-view="assessment">
@@ -377,6 +423,7 @@
 
     <script src="auth-config.js"></script>
     <script src="auth.js"></script>
+    <script src="feedback.js"></script>
     <script src="learning-article.js"></script>
     <script src="carbon-article.js"></script>
     <script src="home-manifesto.js"></script>

@@ -398,7 +398,7 @@ function routeTo(route, historyMode = "push", options = {}) {
 
 function locationFromHash() {
   const [routeName, nestedId] = location.hash.replace(/^#/, "").split("/");
-  const validRoutes = ["home", "assessment", "identify", "build", "house", "carbon-article", "sustainable-housing"];
+  const validRoutes = ["home", "assessment", "identify", "build", "house", "carbon-article", "sustainable-housing", "feedback"];
   const route = validRoutes.includes(routeName) ? routeName : "home";
   const planSystem = route === "build" && planSystems.some(system => system.id === nestedId) ? nestedId : null;
   return { route, planSystem };

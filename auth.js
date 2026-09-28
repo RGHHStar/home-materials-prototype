@@ -14,7 +14,10 @@
       signIn:'Connexion',account:'Mon compte',welcome:'Bienvenue chez vous.',welcomeBack:'Vous êtes connecté.',intro:'Connectez-vous ou créez un compte avec votre adresse courriel. Aucun mot de passe à retenir.',signedInIntro:'Bienvenue dans votre compte EverDwell.',email:'Adresse courriel',emailHelp:'Les adresses personnelles et scolaires sont acceptées.',code:'Code de vérification',send:'Envoyer le code',resend:'Renvoyer le code',verify:'Se connecter',or:'ou continuer avec',google:'Se connecter avec Google',schoolNote:'Un compte Google scolaire peut nécessiter l’autorisation de votre école. La réception des codes dépend aussi des paramètres de sa messagerie.',sharedDevice:'Ordinateur partagé ? Déconnectez-vous après utilisation.',continue:'Continuer à explorer',signOut:'Se déconnecter',close:'Fermer',accountNote:'Vous êtes connecté. L’enregistrement des évaluations et des plans n’est pas encore disponible.',sending:'Envoi…',verifying:'Vérification…',connecting:'Connexion…',emailInvalid:'Saisissez une adresse courriel valide, comme vous@exemple.ca.',codeInvalid:'Saisissez le code à 6 chiffres reçu par courriel.',sendFirst:'Envoyez d’abord un code à cette adresse.',sent:'Code demandé pour {email}. Vérifiez votre boîte de réception et vos pourriels. Votre école pourrait filtrer le message.',unavailable:'La connexion n’est pas encore disponible. Le propriétaire doit connecter le service d’authentification.',emailUnavailable:'La connexion par courriel n’est pas encore disponible. Le propriétaire doit configurer le service d’envoi.',googleUnavailable:'La connexion Google n’est pas encore disponible. Le propriétaire doit terminer la configuration Google.',network:'Impossible de joindre le service. Vérifiez votre connexion et réessayez.',rate:'Trop de tentatives. Attendez quelques minutes avant de réessayer.',expired:'Ce code est incorrect ou a expiré. Vérifiez-le ou demandez-en un nouveau.',failed:'La connexion a échoué. Veuillez réessayer.',redirectFailed:'La connexion Google a été annulée ou a échoué. Pour un compte scolaire, une autorisation de l’administrateur peut être nécessaire.',signedOut:'Vous êtes déconnecté.',signOutFailed:'Impossible de vous déconnecter. Vérifiez votre connexion et réessayez.',https:'Ouvrez le site hébergé ou son aperçu local pour vous connecter.',emailChanged:'Adresse modifiée. Envoyez un nouveau code à cette adresse.'
     }
   };
+  Object.assign(words.en, {feedbackTitle:'Sign in to share your feedback',feedbackIntro:'Please sign in before writing and submitting your feedback. You’ll return to your feedback when you’re signed in.'});
+  Object.assign(words.fr, {feedbackTitle:'Connectez-vous pour donner votre avis',feedbackIntro:'Veuillez vous connecter avant de rédiger et d’envoyer vos commentaires. Vous retrouverez le formulaire après la connexion.'});
   let clientPromise, user = null, busy = '', authRevision = 0;
+  let authContext = '', returnFocus = null;
   let notice = null;
   let otpEmail = '', resendAt = 0;
   const t = key => words[document.documentElement.lang.startsWith('fr') ? 'fr' : 'en'][key];
@@ -31,8 +34,8 @@
   function render() {
     document.querySelectorAll('[data-auth-copy]').forEach(node=>node.textContent=t(node.dataset.authCopy));
     $('auth-open').querySelector('span').textContent=t(user?'account':'signIn');
-    $('auth-title').textContent=t(user?'welcomeBack':'welcome');
-    $('auth-intro').textContent=t(user?'signedInIntro':'intro');
+    $('auth-title').textContent=t(user?'welcomeBack':authContext==='feedback'?'feedbackTitle':'welcome');
+    $('auth-intro').textContent=t(user?'signedInIntro':authContext==='feedback'?'feedbackIntro':'intro');
     $('auth-close').setAttribute('aria-label',t('close'));
     $('auth-login-panel').hidden=!!user;
     $('auth-account-panel').hidden=!user;
@@ -49,7 +52,16 @@
     $('auth-signout').disabled=!!busy;
     renderNotice();
   }
-  function open() { render(); if(!dialog.open)dialog.showModal(); if(!user)$('auth-email').focus(); }
+  function open(options = {}) {
+    authContext=options.context==='feedback'?'feedback':'';
+    returnFocus=options.returnFocus instanceof HTMLElement ? options.returnFocus : $('auth-open');
+    render(); if(!dialog.open)dialog.showModal(); if(!user)$('auth-email').focus();
+  }
+  function notifyAuth() {
+    window.dispatchEvent(new CustomEvent('everdwell:auth-change',{detail:{signedIn:!!user}}));
+  }
+  // UI integration only. A future feedback API must independently verify the session.
+  window.EverDwellAuth=Object.freeze({isSignedIn:()=>!!user,open});
   function isConfigured() {
     return /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(config.supabaseUrl || '') && typeof config.publishableKey==='string' && config.publishableKey.startsWith('sb_publishable_');
   }
@@ -60,7 +72,7 @@
       const {createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/+esm');
       const client=createClient(config.supabaseUrl,config.publishableKey,{auth:{flowType:'pkce',detectSessionInUrl:false,persistSession:true,autoRefreshToken:true}});
       client.auth.onAuthStateChange((event,session)=>{
-        if(event==='SIGNED_OUT'){authRevision++;user=null;render();}
+        if(event==='SIGNED_OUT'){authRevision++;user=null;render();notifyAuth();}
         // Do not await another Supabase call inside its auth-state callback.
         else if(session) setTimeout(()=>refreshUser(client),0);
       });
@@ -75,6 +87,14 @@
     user=!error ? data.user : null;
     if(user){$('auth-code').value='';notice=null;}
     render();
+    notifyAuth();
+    if(user && authContext==='feedback'){
+      const target=returnFocus || $('feedback-message');
+      write('everdwell-auth-context',null);
+      if(dialog.open)dialog.close();
+      authContext='';
+      requestAnimationFrame(()=>{target?.scrollIntoView({block:'center',behavior:'instant'});target?.focus({preventScroll:true});});
+    }
   }
   function report(error,fallback='failed') {
     let key=error?.uiKey;
@@ -93,10 +113,14 @@
     if(!valid){showNotice('emailInvalid','error');$('auth-email').focus();}
     return valid;
   }
-  $('auth-open').addEventListener('click',open);
+  $('auth-open').addEventListener('click',()=>open());
   $('auth-close').addEventListener('click',()=>dialog.close());
   $('auth-continue').addEventListener('click',()=>dialog.close());
-  dialog.addEventListener('close',()=>{$('auth-code').value='';$('auth-open').focus();});
+  dialog.addEventListener('close',()=>{
+    $('auth-code').value='';authContext='';
+    const target=returnFocus || $('auth-open');returnFocus=null;
+    target.focus({preventScroll:true});
+  });
   $('auth-email').addEventListener('input',()=>{
     $('auth-email').removeAttribute('aria-invalid');
     if(otpEmail && $('auth-email').value.trim()!==otpEmail){otpEmail='';$('auth-code').value='';write('everdwell-auth-otp',null);showNotice('emailChanged');}
@@ -136,6 +160,7 @@
     try{
       const client=await getClient();if(!config.googleEnabled)throw {uiKey:'googleUnavailable'};
       write('everdwell-auth-return',location.hash);
+      write('everdwell-auth-context',authContext==='feedback'?'feedback':null);
       const {error}=await client.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:'select_account'},scopes:'openid email profile'}});
       if(error)throw error;
     }catch(error){report(error);}finally{busy='';render();}
@@ -143,7 +168,7 @@
   $('auth-signout').addEventListener('click',async()=>{
     if(busy)return;busy='signout';render();
     try{const client=await getClient();const {error}=await client.auth.signOut({scope:'local'});if(error)throw error;authRevision++;user=null;showNotice('signedOut');}
-    catch(error){report(error,'signOutFailed');}finally{busy='';render();}
+    catch(error){report(error,'signOutFailed');}finally{busy='';render();notifyAuth();}
   });
   new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
   setInterval(()=>{if(dialog.open && !user)render();},1000);
@@ -151,6 +176,8 @@
   async function initialize(){
     const code=callbackParams.get('code');
     const oauthError=callbackParams.has('error') || callbackHash.has('error');
+    const feedbackReturn=(code || oauthError) && read('everdwell-auth-context')==='feedback';
+    if(feedbackReturn){authContext='feedback';returnFocus=$('feedback-message');}
     if(!isConfigured())return;
     try{
       const client=await getClient();
@@ -161,13 +188,13 @@
         if(oauthError)throw {uiKey:'redirectFailed'};
         const {error}=await client.auth.exchangeCodeForSession(code);if(error)throw error;
         const previous=read('everdwell-auth-return');write('everdwell-auth-return',null);
-        if(previous && /^#(?:home|assessment|identify|house|build(?:\/[a-z-]+)?|carbon-article|sustainable-housing)$/.test(previous)){
+        if(previous && /^#(?:home|assessment|identify|house|build(?:\/[a-z-]+)?|carbon-article|sustainable-housing|feedback)$/.test(previous)){
           history.replaceState(history.state,'',location.pathname+location.search+previous);
           window.dispatchEvent(new PopStateEvent('popstate'));
         }
-        await refreshUser(client);open();
+        await refreshUser(client);if(!feedbackReturn)open();
       }else{const {data}=await client.auth.getSession();if(data.session)await refreshUser(client);}
-    }catch(error){report(error,code?'redirectFailed':'network');if(code||oauthError)open();}
+    }catch(error){report(error,code?'redirectFailed':'network');if(code||oauthError)open(feedbackReturn?{context:'feedback',returnFocus:$('feedback-message')}:{});}
   }
   initialize();
 })();
