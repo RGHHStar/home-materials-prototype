@@ -2,11 +2,11 @@
 const manifestoContent = {
   en: {
     lines: ['Rethinking the', 'Way', 'We Live'],
-    description: 'EverDwell is a sustainability platform dedicated to reimagining the future of housing, empowering people to make more informed, responsible, and environmentally conscious choices for a better tomorrow.'
+    description: 'EverDwell is a sustainability platform dedicated to reimagining the future of housing, empowering people to make more informed, responsible, and environmentally conscious choices for a better home.'
   },
   fr: {
     lines: ['Repenser notre', 'façon', 'de vivre'],
-    description: 'EverDwell est une plateforme consacrée au développement durable qui repense l’avenir de l’habitat et permet à chacun de faire des choix plus éclairés, responsables et respectueux de l’environnement pour un avenir meilleur.'
+    description: 'EverDwell est une plateforme consacrée au développement durable qui repense l’avenir de l’habitat et permet à chacun de faire des choix plus éclairés, responsables et respectueux de l’environnement pour un meilleur chez-soi.'
   }
 };
 
