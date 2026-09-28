@@ -1,4 +1,6 @@
 // Authentication is verified server-side. This endpoint intentionally has no read API.
+import {queueAcknowledgement,deliverMail} from '../_mail/mail-core.mjs';
+import {gmailSender} from '../_mail/gmail.mjs';
 const AUTH_URL = 'https://bmyvzfxzrppajuntwfxg.supabase.co';
 const AUTH_KEY = 'sb_publishable_3QXe2UKLqty40BY5SE4RQQ_7vcwwrz-';
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -22,7 +24,7 @@ async function readBody(request) {
   return JSON.parse(new TextDecoder().decode(bytes));
 }
 
-export async function onRequest({request, env}) {
+export async function onRequest({request, env,waitUntil}) {
   if (request.method !== 'POST') return json(405,{error:'method_not_allowed'},{Allow:'POST'});
   const origin = request.headers.get('Origin');
   if (origin && origin !== new URL(request.url).origin) return json(403,{error:'forbidden'});
@@ -52,10 +54,19 @@ export async function onRequest({request, env}) {
   try {
     // Primary session prevents a just-written receipt being read from a stale replica.
     const db = env.FEEDBACK_DB.withSession('first-primary');
+    const confirm=async()=>{
+      // Feedback is already saved. Mail failure must never undo or misreport that success.
+      try{
+        const row=await db.prepare('SELECT id,locale FROM feedback WHERE user_id=? AND request_id=?').bind(user.id,body.requestId).first();
+        const mailDb={async query(sql,params){const result=await db.prepare(sql).bind(...params).all();if(!result.success)throw new Error('database_unavailable');return result.results}};
+        const id=await queueAcknowledgement(mailDb,row,user.email);
+        if(id&&env.GMAIL_APP_PASSWORD){const sending=deliverMail(mailDb,{MAIL_ENABLED:true,sendMail:gmailSender(env.GMAIL_APP_PASSWORD)},id).catch(()=>{});if(waitUntil)waitUntil(sending);else await sending}
+      }catch{/* The administrator sees missing/pending acknowledgement; the receipt is still valid. */}
+    };
     const existing = await db.prepare('SELECT category, section, message, locale FROM feedback WHERE user_id = ? AND request_id = ?')
       .bind(user.id, body.requestId).first();
     const matches = row => row && data.every((value,index)=>value === row[['category','section','message','locale'][index]]);
-    if (existing) return matches(existing) ? json(200,{ok:true,receipt:body.requestId}) : json(409,{error:'request_conflict'});
+    if (existing) {if(matches(existing)){await confirm();return json(200,{ok:true,receipt:body.requestId})}return json(409,{error:'request_conflict'})}
     // One atomic statement applies per-user limits even when requests arrive together.
     const result = await db.prepare(`INSERT INTO feedback (user_id, request_id, category, section, message, locale)
       SELECT ?, ?, ?, ?, ?, ?
@@ -63,10 +74,10 @@ export async function onRequest({request, env}) {
         AND (SELECT COUNT(*) FROM feedback WHERE user_id = ? AND created_at > unixepoch() - 86400) < 10
       ON CONFLICT(user_id, request_id) DO NOTHING`)
       .bind(user.id, body.requestId, ...data, user.id, user.id).run();
-    if (result.meta.changes > 0) return json(201,{ok:true,receipt:body.requestId});
+    if (result.meta.changes > 0) {await confirm();return json(201,{ok:true,receipt:body.requestId})}
     const receipt = await db.prepare('SELECT category, section, message, locale FROM feedback WHERE user_id = ? AND request_id = ?')
       .bind(user.id, body.requestId).first();
-    if (receipt) return matches(receipt) ? json(200,{ok:true,receipt:body.requestId}) : json(409,{error:'request_conflict'});
+    if (receipt) {if(matches(receipt)){await confirm();return json(200,{ok:true,receipt:body.requestId})}return json(409,{error:'request_conflict'})}
     return json(429,{error:'rate_limited'},{'Retry-After':'60'});
   } catch {
     // Do not put feedback, credentials, or database error details in public responses/logs.

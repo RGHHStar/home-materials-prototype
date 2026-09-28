@@ -23,6 +23,12 @@
   }
   Object.assign(copy.zh,{loading:'正在加载真实反馈和用户邮箱…',database_not_configured:'登录验证成功。还需要配置 Cloudflare 数据库访问授权，才能读取真实反馈。',directory_not_configured:'还需要配置 Supabase 后端授权，才能查询反馈对应的用户邮箱。',data_unavailable:'暂时无法读取数据。请检查后端授权或网络，点击“刷新反馈”重试。',writes_disabled:'当前只读。完成数据库状态表配置后，才能保存状态。',status_conflict:'另一位管理员刚修改了这条反馈，请刷新后再操作。',missingUser:'用户不存在或邮箱不可用',readOnly:'已连接真实反馈；状态编辑暂未启用，邮件发送尚未配置。',ready:'真实反馈已加载。状态更改会保存到数据库；邮件发送尚未配置。',loadMore:'加载更多',sign_in_required:'请重新登录。',admin_required:'此账号没有管理员权限。'});
   Object.assign(copy.en,{loading:'Loading live feedback and user emails…',database_not_configured:'Sign-in verified. Cloudflare database authorization is still needed to load live feedback.',directory_not_configured:'Supabase server authorization is needed to resolve user emails.',data_unavailable:'Data could not be loaded. Check server credentials or the network, then refresh.',writes_disabled:'Read-only. Configure the status table before saving status changes.',status_conflict:'The other administrator just changed this item. Refresh before trying again.',missingUser:'User or email unavailable',readOnly:'Live feedback connected. Status editing and email sending are not enabled yet.',ready:'Live feedback loaded. Status changes are saved to the database; email sending is not configured.',loadMore:'Load more',sign_in_required:'Please sign in again.',admin_required:'This account is not an administrator.'});
+  let mailReady=false;
+  const replyRequests=new Map();
+  if(!demo){
+    Object.assign(copy.zh,{demoNotice:'管理后台 · 新反馈会收到自动确认邮件；管理员回复由官方邮箱发送。发送结果以邮件记录为准。',previewFooter:'官方发件人 · everdwellsupport@gmail.com',notConfigured:'everdwellsupport@gmail.com',send:'发送回复',sending:'正在发送…',simulationNote:'点击后发送你填写的原文。发信服务接受后自动标记已处理；不代表邮件已经送达。',listNote:'自动确认不改变处理状态。手动回复被发信服务接受后标记已处理，也可手动切换。',ready:'真实反馈已加载。请在回复窗口查看邮件发送记录。',readOnly:'真实反馈已加载，当前处理状态只读。',ack:'自动确认邮件',noAck:'无自动确认记录（可能是功能启用前的反馈）',mailHistory:'邮件记录',pendingMail:'待发送',sendingMail:'发送中；请稍后刷新',acceptedMail:'发信服务已接受（不等于已送达）',failedMail:'发送失败',unknownMail:'结果待确认：请检查官方邮箱已发送记录，不要重复发信',retryMail:'重试发送',mail_not_configured:'发信服务尚未完成配置，暂不能发送。',recipient_unavailable:'收件邮箱不可用，无法发送。',reply_conflict:'状态已变化、已有待确认回复，或达到本条反馈每日回复上限。请刷新后检查邮件记录。',request_conflict:'此次发送内容与原请求不一致，请刷新检查记录。',mailAccepted:'发信服务已接受回复，反馈已标记为已处理。',mailFailed:'发送失败，原回复已保存在邮件记录中，可在那里重试。',mailUnknown:'发送结果待确认。请查看邮件记录和官方邮箱，勿重复发送。',manualMail:'管理员回复',checkMail:'刷新反馈后查看最新邮件状态。'});
+    Object.assign(copy.en,{demoNotice:'Admin workspace · New feedback receives an automatic acknowledgement. Manual replies use the official mailbox. Check each email’s status.',previewFooter:'Official sender · everdwellsupport@gmail.com',notConfigured:'everdwellsupport@gmail.com',send:'Send reply',sending:'Sending…',simulationNote:'Your exact text will be sent. Acceptance by the mail service marks this feedback handled; it does not prove delivery.',listNote:'Acknowledgements do not change feedback status. Accepted manual replies mark it handled; you can also change it manually.',ready:'Live feedback loaded. Open a reply to see email records.',readOnly:'Live feedback loaded. Status editing is read-only.',ack:'Automatic acknowledgement',noAck:'No acknowledgement record (this may predate the email feature)',mailHistory:'Email records',pendingMail:'Pending',sendingMail:'Sending; refresh shortly',acceptedMail:'Accepted by mail service (not delivery confirmation)',failedMail:'Failed',unknownMail:'Outcome unknown: check the official Sent folder before sending again',retryMail:'Retry sending',mail_not_configured:'Email sending is not configured yet.',recipient_unavailable:'The recipient email is unavailable.',reply_conflict:'The status changed, a reply is awaiting confirmation, or this feedback reached its daily reply limit. Refresh and review email records.',request_conflict:'This request differs from its original content. Refresh and review records.',mailAccepted:'Reply accepted by the mail service. Feedback marked handled.',mailFailed:'Sending failed. Your reply is saved in email records, where you can retry.',mailUnknown:'Sending outcome unknown. Check email records and the official mailbox; do not send again.',manualMail:'Administrator reply',checkMail:'Refresh feedback to check the latest email status.'});
+  }
   const drafts=new Map();
   try{
     lang=localStorage.getItem(LANG)==='en'?'en':'zh';
@@ -41,8 +47,8 @@
     const revision=dataRevision;loading=true;dataError='loading';renderDataStatus();
     try{
       const data=await window.AdminSession.api('feedback'+(append&&nextCursor?'?before='+encodeURIComponent(nextCursor):''));if(revision!==dataRevision)return;
-      const incoming=data.items.map(row=>({id:row.id,email:row.email||'',initials:row.email?row.email.slice(0,2).toUpperCase():'?',category:row.category,section:row.section,date:new Date(row.created_at*1000).toISOString(),status:row.status,version:row.version,message:{zh:row.message,en:row.message},replies:[]}));
-      rows=append?[...rows,...incoming]:incoming;nextCursor=data.nextCursor;stateReady=data.stateReady;dataError=stateReady&&window.AdminSession.current()?.remoteWrites?'ready':'readOnly';renderRows();
+      const incoming=data.items.map(row=>({id:row.id,email:row.email||'',initials:row.email?row.email.slice(0,2).toUpperCase():'?',category:row.category,section:row.section,date:new Date(row.created_at*1000).toISOString(),status:row.status,version:row.version,message:{zh:row.message,en:row.message},mail:row.mail||[],replies:(row.mail||[]).filter(m=>m.kind==='reply')}));
+      rows=append?[...rows,...incoming]:incoming;nextCursor=data.nextCursor;stateReady=data.stateReady;mailReady=data.mailReady===true;dataError=stateReady&&window.AdminSession.current()?.remoteWrites?'ready':'readOnly';renderRows();if($('reply-dialog').open)renderDialog();
     }catch(e){if(revision!==dataRevision)return;dataError=copy.zh[e.error]?e.error:'data_unavailable'}finally{loading=false;renderDataStatus()}
   }
   function renderDataStatus(){if(demo)return;$('data-status').hidden=!dataError;$('data-status').textContent=t(dataError);$('reset').disabled=loading;$('load-more').hidden=!nextCursor;$('load-more').disabled=loading;$('load-more').textContent=t('loadMore')}
@@ -78,9 +84,20 @@
     const row=rows.find(r=>r.id===activeId);if(!row)return;
     $('recipient').textContent=row.email||t('missingUser');$('original-message').textContent=row.message[lang];
     const history=$('history');history.replaceChildren();history.hidden=!row.replies.length;history.setAttribute('aria-label',t('history'));
-    if(row.replies.length){history.append(node('h3','',t('history')));for(const reply of row.replies){const article=node('article');article.append(node('time','',date(reply.date)),node('p','',reply.text??reply.sample[lang]));history.append(article)}}
+    if(demo&&row.replies.length){history.append(node('h3','',t('history')));for(const reply of row.replies){const article=node('article');article.append(node('time','',date(reply.date)),node('p','',reply.text??reply.sample[lang]));history.append(article)}}
+    if(!demo){history.hidden=false;history.append(node('h3','',t('mailHistory')));if(!row.mail.some(m=>m.kind==='ack'))history.append(node('p','',t('noAck')));
+      for(const mail of row.mail){const article=node('article');article.append(node('strong','',t(mail.kind==='ack'?'ack':'manualMail')),node('time','',date(new Date(mail.created_at*1000))),node('p','',t({pending:'pendingMail',sending:'sendingMail',accepted:'acceptedMail',failed:'failedMail',unknown:'unknownMail'}[mail.status])),node('p','',mail.body));
+        if(['pending','failed'].includes(mail.status)&&mail.attempts<3){const retry=node('button','secondary',t('retryMail'));retry.type='button';retry.disabled=busy||!mailReady;retry.addEventListener('click',()=>retryEmail(mail.id));article.append(retry)}history.append(article)}
+    }
     $('send-reply').querySelector('[data-i18n]').textContent=t(busy?'sending':'send');
-    if(!demo)$('send-reply').disabled=true;
+    if(!demo)$('send-reply').disabled=busy||!mailReady||!row.email||!window.AdminSession.current()?.remoteWrites||row.mail.some(m=>m.kind==='reply'&&['pending','sending','unknown'].includes(m.status));
+  }
+  async function retryEmail(id){
+    if(busy||!mailReady)return;busy=true;renderDialog();const revision=dataRevision;
+    try{const result=await window.AdminSession.api('mail/retry',{method:'POST',body:JSON.stringify({id})});if(revision!==dataRevision)return;
+      if(result.mail.status==='accepted'&&result.mail.kind==='reply'&&$('reply-message').value===result.mail.body){drafts.delete(activeId);replyRequests.delete(activeId);$('reply-message').value='';$('reply-count').textContent='0 / 5,000'}
+      toast(result.mail.status==='accepted'?(result.mail.kind==='ack'?'checkMail':'mailAccepted'):result.mail.status==='failed'?'mailFailed':'mailUnknown');await loadFeedback();
+    }catch(e){if(revision===dataRevision)toast(copy.zh[e.error]?e.error:'data_unavailable')}finally{busy=false;renderDialog()}
   }
   function render(){
     document.documentElement.lang=lang==='zh'?'zh-CN':'en';document.title='EverDwell · '+t('feedbackNav');
@@ -97,8 +114,21 @@
   $('reply-dialog').addEventListener('close',()=>{if(activeId!==null)drafts.set(activeId,$('reply-message').value);const target=returnButton?.isConnected?returnButton:$('feedback-rows').querySelector(`[data-id="${activeId}"] button`);(target||document.querySelector(`[data-filter="${filter}"]`)).focus();activeId=null;returnButton=null});
   $('reply-message').addEventListener('input',()=>{drafts.set(activeId,$('reply-message').value);$('reply-count').textContent=`${$('reply-message').value.length} / 5,000`;$('reply-error').hidden=true;$('reply-message').removeAttribute('aria-invalid')});
   $('reply-form').addEventListener('submit',async event=>{
-    event.preventDefault();if(!demo||busy||activeId===null)return;const text=$('reply-message').value;
+    event.preventDefault();if(busy||activeId===null)return;const text=$('reply-message').value;
     if(!text.trim()){$('reply-error').textContent=t('required');$('reply-error').hidden=false;$('reply-message').setAttribute('aria-invalid','true');$('reply-message').focus();return}
+    if(!demo){
+      if(!mailReady){toast('mail_not_configured');return}
+      const row=rows.find(r=>r.id===activeId),revision=dataRevision;
+      let request=replyRequests.get(row.id);if(!request||request.text!==text){request={id:row.id,text,requestId:crypto.randomUUID(),version:row.version};replyRequests.set(row.id,request)}
+      busy=true;['send-reply','cancel-reply','close-reply','reply-message'].forEach(id=>$(id).disabled=true);renderDialog();
+      try{const result=await window.AdminSession.api('reply',{method:'POST',body:JSON.stringify(request)});if(revision!==dataRevision)return;
+        if(result.mail.status==='accepted'){drafts.delete(row.id);replyRequests.delete(row.id);$('reply-message').value='';toast('mailAccepted')}
+        else toast(result.mail.status==='failed'?'mailFailed':'mailUnknown');
+        await loadFeedback();
+      }catch(e){if(revision===dataRevision){toast(copy.zh[e.error]?e.error:'mailUnknown');await loadFeedback()}}
+      finally{busy=false;['cancel-reply','close-reply','reply-message'].forEach(id=>$(id).disabled=false);if(revision===dataRevision)renderDialog()}
+      return;
+    }
     busy=true;$('reply-form').setAttribute('aria-busy','true');['send-reply','cancel-reply','close-reply','reply-message'].forEach(id=>$(id).disabled=true);renderDialog();
     // LOCAL DEMO ONLY. No fetch, email, authentication credentials or live database access.
     await new Promise(resolve=>setTimeout(resolve,650));
@@ -113,7 +143,7 @@
   $('confirm-reset').addEventListener('click',()=>{if(!demo)return;rows=fresh();drafts.clear();const stored=persist();filter='all';$('search').value='';$('reset-dialog').close();render();toast(stored?'resetSaved':'storageError')});
   $('load-more').addEventListener('click',()=>loadFeedback(true));
   window.addEventListener('admin-session-change',event=>{
-    if(demo)return;dataRevision++;rows=[];drafts.clear();nextCursor=null;stateReady=false;dataError='';$('search').value='';$('reply-message').value='';if($('reply-dialog').open)$('reply-dialog').close();renderRows();renderDataStatus();
+    if(demo)return;dataRevision++;rows=[];drafts.clear();replyRequests.clear();nextCursor=null;stateReady=false;mailReady=false;dataError='';$('search').value='';$('reply-message').value='';if($('reply-dialog').open)$('reply-dialog').close();renderRows();renderDataStatus();
     if(event.detail){loading=false;loadFeedback()}
   });
   render();
