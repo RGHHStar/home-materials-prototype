@@ -60,8 +60,14 @@
   function notifyAuth() {
     window.dispatchEvent(new CustomEvent('everdwell:auth-change',{detail:{signedIn:!!user}}));
   }
-  // UI integration only. A future feedback API must independently verify the session.
-  window.EverDwellAuth=Object.freeze({isSignedIn:()=>!!user,open});
+  // Only access tokens leave this module; the feedback server verifies them independently.
+  async function getAccessToken(){
+    const client=await getClient();
+    const {data,error}=await client.auth.getSession();
+    if(error)throw error;
+    return data.session?.access_token || null;
+  }
+  window.EverDwellAuth=Object.freeze({isSignedIn:()=>!!user,open,getAccessToken});
   function isConfigured() {
     return /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(config.supabaseUrl || '') && typeof config.publishableKey==='string' && config.publishableKey.startsWith('sb_publishable_');
   }
