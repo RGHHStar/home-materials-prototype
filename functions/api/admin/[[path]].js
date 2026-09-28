@@ -3,7 +3,8 @@ export const PUBLIC_KEY='sb_publishable_3QXe2UKLqty40BY5SE4RQQ_7vcwwrz-';
 // Verified existing Supabase identities. Neither email recycling nor client metadata grants access.
 const ADMIN_USERS=new Map([
  ['9f373a9b-edac-42f4-b1fe-d79d11fbb833','frankguan20110115@gmail.com'],
- ['f461290f-5099-4ecd-ac8e-7c2012fb0096','qix220@g.harvard.edu']
+ ['f461290f-5099-4ecd-ac8e-7c2012fb0096','qix220@g.harvard.edu'],
+ ['35a02ec4-72b2-42da-95bf-9efa3490b61b','everdwellsupport@gmail.com']
 ]);
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const response=(status,body)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});

@@ -1,5 +1,7 @@
 # Admin deployment
 
+Full administrators: frankguan20110115@gmail.com, qix220@g.harvard.edu, and everdwellsupport@gmail.com. Each is bound to its verified Supabase user ID. Mailbox administrator access does not configure outgoing mail.
+
 The production administrator entry point is `/admin/`. Public assets are in `admin/` and protected APIs are in `functions/api/admin/`.
 
 Cloudflare Pages production settings:
