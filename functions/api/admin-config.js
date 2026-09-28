@@ -1,0 +1,1 @@
+export function onRequestGet(){return Response.json({supabaseUrl:"https://bmyvzfxzrppajuntwfxg.supabase.co",publishableKey:"sb_publishable_3QXe2UKLqty40BY5SE4RQQ_7vcwwrz-",googleRedirectReady:true},{headers:{'Cache-Control':'no-store'}})}

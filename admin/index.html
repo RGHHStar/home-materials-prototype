@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>EverDwell · 反馈管理</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="admin-auth.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a href="#" class="brand" aria-label="EverDwell"><span class="brand-icon" aria-hidden="true">⌂</span>EverDwell<span class="brand-dot">.</span></a>
+    <div class="language" role="group" aria-label="Language / 语言"><button type="button" data-lang="zh" aria-pressed="true">中文</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+    <p class="nav-label" data-i18n="workspace">工作空间</p>
+    <nav aria-label="Main"><a class="nav-item active" href="#feedback" aria-current="page"><span aria-hidden="true">▤</span><span data-i18n="feedbackNav">用户反馈</span><span class="nav-count" id="nav-count">0</span></a></nav>
+    <div class="sidebar-bottom"><span class="avatar">E</span><div><strong data-i18n="team">EverDwell 团队</strong><span data-i18n="adminPreview">管理员界面预览</span></div><span class="online-dot" aria-hidden="true"></span></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><div class="breadcrumb"><span data-i18n="console">管理工作台</span><span>/</span><strong data-i18n="feedbackNav">用户反馈</strong></div><span class="preview-pill"><span aria-hidden="true">◉</span><span data-i18n="localPreview">本地预览</span></span></header>
+    <section id="login-panel" class="login-panel" aria-labelledby="login-title">
+      <p class="eyebrow">EVERDWELL ADMIN</p><h1 id="login-title" data-login-copy="title">管理员登录</h1><p class="subtitle" data-login-copy="intro">使用你或导师的账号登录。权限将由服务器核验。</p>
+      <button type="button" class="secondary google-login" id="login-google" data-login-copy="google">使用 Google 登录</button>
+      <div class="login-divider" data-login-copy="or">或使用邮箱验证码</div>
+      <form id="login-form"><label for="login-email" data-login-copy="email">管理员邮箱</label><input id="login-email" type="email" autocomplete="email" required placeholder="you@example.com"><label for="login-code" data-login-copy="code">邮箱验证码</label><div class="code-input"><input id="login-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code"><button type="button" class="secondary" id="login-send" data-login-copy="send">发送验证码</button></div><button type="submit" class="primary login-submit" id="login-submit" data-login-copy="verify">验证并登录</button></form>
+      <p id="login-status" role="status" aria-live="polite"></p><button type="button" class="text-button" id="login-signout" hidden data-login-copy="switch">退出当前账号</button><p class="login-footnote" data-login-copy="footnote">个人账号负责登录，官方邮箱负责发信，两者独立。</p>
+    </section>
+    <div id="admin-session" class="admin-session" hidden><span id="admin-email"></span><span data-login-copy="role">最高权限管理员</span><button type="button" class="text-button" id="admin-signout" data-login-copy="signout">退出登录</button></div>
+    <main id="feedback" hidden>
+      <section class="heading"><div><p class="eyebrow">LISTEN. REPLY. IMPROVE.</p><h1 data-i18n="title">每一个建议，都值得回应。</h1><p class="subtitle" data-i18n="subtitle">在这里查看用户的声音，回复反馈，让更好的体验发生。</p></div><div class="heading-mark" aria-hidden="true">↗</div></section>
+      <div class="preview-notice"><span class="notice-icon" aria-hidden="true">i</span><p data-i18n="demoNotice">当前为本地演示，使用示例数据。回复只保存在此浏览器，不会发送邮件，也不会修改线上反馈。</p></div>
+      <div id="data-status" class="data-status" role="status" aria-live="polite" hidden></div>
+      <section class="stats" aria-label="Summary"><article class="stat"><div><span data-i18n="total">全部反馈</span><span class="stat-symbol" aria-hidden="true">▤</span></div><strong id="total-count">0</strong><p data-i18n="totalNote">每一份反馈，都让我们更进一步</p></article><article class="stat"><div><span data-i18n="pending">未处理</span><span class="stat-symbol amber" aria-hidden="true">◷</span></div><strong id="pending-count">0</strong><p><span class="small-dot amber-bg"></span><span data-i18n="pendingNote">等待你的关注与回应</span></p></article><article class="stat"><div><span data-i18n="done">已处理</span><span class="stat-symbol" aria-hidden="true">✓</span></div><strong id="done-count">0</strong><p><span class="small-dot"></span><span data-i18n="doneNote">包含回复后及手动标记的反馈</span></p></article></section>
+      <section class="inbox" aria-labelledby="list-title"><div class="inbox-heading"><div><h2 id="list-title" data-i18n="listTitle">反馈收件箱</h2><p data-i18n="listNote">回复后自动标记为已处理，你也可以随时手动更改。</p></div><button type="button" class="text-button" id="reset" data-i18n="reset">重置演示</button></div>
+        <div class="toolbar"><div class="filters" role="group" aria-label="Status / 状态"><button data-filter="all" type="button" aria-pressed="true"><span data-i18n="all">全部</span><span id="filter-total"></span></button><button data-filter="pending" type="button" aria-pressed="false" data-i18n="pending">未处理</button><button data-filter="done" type="button" aria-pressed="false" data-i18n="done">已处理</button></div><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" data-placeholder="search" placeholder="搜索邮箱或反馈内容" aria-label="搜索邮箱或反馈内容"></label></div>
+        <div class="table-scroll" role="region" aria-label="Feedback list / 反馈列表" tabindex="0"><table><thead><tr><th data-i18n="user">用户 / 时间</th><th data-i18n="category">类型</th><th class="message-heading" data-i18n="content">反馈内容</th><th data-i18n="reply">回复</th><th data-i18n="status">状态</th></tr></thead><tbody id="feedback-rows"></tbody></table></div>
+        <div class="empty" id="empty" hidden><span aria-hidden="true">⌕</span><h3 data-i18n="emptyTitle">没有找到匹配的反馈</h3><p data-i18n="emptyNote">试试其他关键词，或切换到“全部”。</p></div>
+        <footer class="list-footer"><span id="result-count"></span><span data-i18n="sortNote">按最新提交排序 ↓</span></footer>
+      </section>
+      <footer class="page-footer"><span>EverDwell <span class="muted">/</span> <span data-i18n="teamWorkspace">团队工作空间</span></span><span data-i18n="previewFooter">设计预览 · 未连接真实发信服务</span></footer>
+      <button id="load-more" class="secondary" type="button" hidden>加载更多 / Load more</button>
+    </main>
+  </div>
+  <dialog id="reply-dialog" aria-labelledby="reply-title"><form id="reply-form"><header class="dialog-header"><div><p class="eyebrow" data-i18n="replyEyebrow">一份反馈，一次交流</p><h2 id="reply-title" data-i18n="replyTitle">回复用户</h2></div><button type="button" class="close" id="close-reply" aria-label="关闭">×</button></header><div class="dialog-body"><div class="mail-meta"><div><span data-i18n="to">收件人</span><strong id="recipient"></strong></div><div><span data-i18n="from">发件人</span><span><b data-i18n="publicMailbox">EverDwell 公共邮箱</b><small data-i18n="notConfigured">待配置 · 不使用个人邮箱发送</small></span></div></div><details class="original" open><summary data-i18n="original">用户的反馈</summary><p id="original-message"></p></details><section id="history" class="history" hidden aria-label="Reply history"></section><label class="field-label" for="reply-message" data-i18n="yourReply">你的回复</label><textarea id="reply-message" rows="5" maxlength="5000" required data-placeholder="replyPlaceholder" placeholder="写下你想回复给用户的内容……" aria-describedby="reply-help reply-error"></textarea><div class="reply-meta"><span id="reply-help" data-i18n="replyHelp">将发送你填写的内容，不会自动生成或改写。</span><span id="reply-count">0 / 5,000</span></div><p id="reply-error" role="alert" hidden></p><div class="simulation-note"><span aria-hidden="true">◉</span><span data-i18n="simulationNote">演示模式：点击下方按钮仅模拟发送，并标记为已处理。</span></div></div><footer class="dialog-footer"><button type="button" class="secondary" id="cancel-reply" data-i18n="cancel">取消</button><button type="submit" class="primary" id="send-reply"><span data-i18n="send">模拟发送回复</span><span aria-hidden="true">↗</span></button></footer></form></dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title" class="small-dialog"><div class="dialog-body"><h2 id="reset-title" data-i18n="resetTitle">恢复初始示例？</h2><p data-i18n="resetNote">这会清除本浏览器内的模拟回复与状态更改。不会影响线上数据。</p></div><footer class="dialog-footer"><button type="button" class="secondary" id="cancel-reset" data-i18n="cancel">取消</button><button type="button" class="primary" id="confirm-reset" data-i18n="confirmReset">恢复示例</button></footer></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
