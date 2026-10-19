@@ -67,7 +67,7 @@ test('temporary capacity failures cool briefly, not for the rest of the day',asy
   assert.equal(cooldownSeconds({status:429},now),30);
 });
 test('empty answers, provider errors, prohibited ratings and timeouts fall back without retry or leaks',async t=>{
-  for(const run of [async()=>({response:''}),async()=>{throw Error('secret-provider-details')},async()=>({response:'Costs CAD $100 with a 95/100 score.'}),()=>new Promise(()=>{})]){
+  for(const run of [async()=>({response:''}),async()=>{throw Error('secret-provider-details')},async()=>({response:'Costs CAD $100 with a 95/100 score.'}),async()=>({response:'Cellulose is cost-effective.'}),async()=>({response:'Un prix abordable.'}),()=>new Promise(()=>{})]){
     let calls=0;const {env}=setup(t,(...args)=>{calls++;return run(...args)});
     const answer=await answerWithWorkersAI(request(),env,body(),{timeoutMs:5});
     assert.equal(answer.mode,'fallback');assert.equal(calls,1);assert.doesNotMatch(answer.answer,/secret-provider|95\/100|\$100/);
