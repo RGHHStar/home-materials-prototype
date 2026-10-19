@@ -120,12 +120,18 @@
       } else element.appendChild(document.createTextNode(token));
     });
   }
-  function messageBubble(role, content, isPending, mode) {
+  function messageBubble(role, content, isPending, mode, sources=[]) {
     const row = document.createElement("div");row.className="ed-agent-entry "+(role === "user" ? "user" : "assistant")+(isPending?" pending":"");
     const avatar=document.createElement("div");avatar.className="ed-agent-avatar";avatar.textContent=role === "user" ? copy().you : "✦";
     const bubble=document.createElement("div");bubble.className="ed-agent-bubble";
     if(role==='assistant'&&!isPending){const label=document.createElement('strong');label.textContent=(mode==='ai'?copy().connected:copy().guide)+'\n';bubble.append(label);}
     boldText(bubble, String(content||""));
+    for(const source of sources){
+      if(typeof source.url!=='string'||!source.url.startsWith('https://www.energy.gov/'))continue;
+      const link=document.createElement('a');link.href=source.url;link.target='_blank';link.rel='noopener noreferrer';
+      link.textContent=`[${source.id}] ${language()==='fr'?'Source externe':'External source'}: ${source.title}`;
+      bubble.append(document.createTextNode('\n'),link);
+    }
     row.append(avatar,bubble);return row;
   }
   function updateView() {
@@ -143,7 +149,7 @@
     }
     conversation.forEach(msg=>{
       if (msg && (msg.role === "assistant" || msg.role === "user") && typeof msg.content === "string") {
-        transcript.append(messageBubble(msg.role,msg.content,false,msg.mode));
+        transcript.append(messageBubble(msg.role,msg.content,false,msg.mode,msg.sources));
       }
     });
     if (pending && pending.type === "ask") {
@@ -186,7 +192,7 @@
       if (typeof data.answer !== 'string' || !['ai','guide','fallback'].includes(data.mode)) throw new Error('invalid');
       if (requestGeneration !== generation) return;
       retryRequest=null;
-      conversation.push({role:'user',content:question},{role:'assistant',content:data.answer,mode:data.mode});
+      conversation.push({role:'user',content:question},{role:'assistant',content:data.answer,mode:data.mode,sources:Array.isArray(data.sources)?data.sources:[]});
       serverMode=data.mode; powered=!!data.aiAvailable;
     } catch (_) {
       if (requestGeneration !== generation) return;

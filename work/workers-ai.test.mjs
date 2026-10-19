@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
-import {answerWithWorkersAI,buildMessages,configured,cooldownSeconds,MODEL,MAX_OUTPUT_TOKENS,reserveUsage} from '../functions/_advisor/workers-ai.mjs';
+import {answerWithWorkersAI,buildMessages,configured,cooldownSeconds,MODEL,MAX_OUTPUT_TOKENS,reserveUsage,validateGroundedAnswer} from '../functions/_advisor/workers-ai.mjs';
 import {onRequest} from '../functions/api/advisor.js';
 
-function setup(t,run=async()=>({response:'Cellulose and mineral wool have different moisture and installation requirements.'})){
+function setup(t,run=async()=>({response:'Cellulose and mineral wool have different moisture and installation requirements. [1]'})){
   const sqlite=new DatabaseSync(':memory:');t.after(()=>sqlite.close());
   sqlite.exec('CREATE TABLE feedback(id INTEGER PRIMARY KEY,message TEXT); INSERT INTO feedback VALUES(1,\'unchanged\')');
   const env={AI:{run},AI_FREE_TIER_CONFIRMED:'true',ADVISOR_RATE_SALT:'only-a-test-salt-'.repeat(3),FEEDBACK_DB:{withSession(){return {prepare(sql){let args=[];return {
@@ -38,7 +38,7 @@ test('bounded multilingual prompts carry relevant evidence and follow-up history
 test('successful binding response uses the fixed model and never touches feedback data',async t=>{
   let calls=0;const {env,sqlite}=setup(t,async(model,input)=>{
     calls++;assert.equal(model,MODEL);assert.equal(input.max_tokens,MAX_OUTPUT_TOKENS);assert.equal(input.stream,false);
-    assert.match(input.messages[0].content,/French/);return {response:'La cellulose et la laine minérale demandent une installation adaptée.'};
+    assert.match(input.messages[0].content,/French/);return {response:'La cellulose et la laine minérale demandent une installation adaptée. [1]'};
   });
   const answer=await answerWithWorkersAI(request(),env,body({context:{language:'fr'}}));
   assert.equal(answer.mode,'ai');assert.match(answer.answer,/cellulose/);assert.equal(calls,1);
@@ -47,12 +47,12 @@ test('successful binding response uses the fixed model and never touches feedbac
   assert.doesNotMatch(JSON.stringify(rows),/192\.0\.2\.1|cellulose|question|response/);
 });
 test('replayed request IDs do not invoke AI twice',async t=>{
-  let calls=0;const {env}=setup(t,async()=>{calls++;return {response:'A comparison.'}}),input=body();
+  let calls=0;const {env}=setup(t,async()=>{calls++;return {response:'A comparison. [1]'}}),input=body();
   assert.equal((await answerWithWorkersAI(request(),env,input)).mode,'ai');
   assert.equal((await answerWithWorkersAI(request(),env,input)).mode,'fallback');assert.equal(calls,1);
 });
 test('daily free quota failure cools until UTC midnight and then recovers',async t=>{
-  let calls=0;const {env,sqlite}=setup(t,async()=>{if(++calls===1)throw new Error('3036: daily free allocation exhausted');return {response:'Recovered.'}});
+  let calls=0;const {env,sqlite}=setup(t,async()=>{if(++calls===1)throw new Error('3036: daily free allocation exhausted');return {response:'Recovered. [1]'}});
   const now=20000*86400+86380;
   assert.equal((await answerWithWorkersAI(request(),env,body(),{now})).mode,'fallback');
   assert.equal(sqlite.prepare('SELECT until_at FROM advisor_cf_state').get().until_at,now+20);
@@ -60,7 +60,7 @@ test('daily free quota failure cools until UTC midnight and then recovers',async
   assert.equal((await answerWithWorkersAI(request(),env,body(),{now:now+21})).mode,'ai');assert.equal(calls,2);
 });
 test('temporary capacity failures cool briefly, not for the rest of the day',async t=>{
-  let calls=0;const {env}=setup(t,async()=>{if(++calls===1)throw new Error('3040: Capacity temporarily exceeded');return {response:'Recovered.'}}),now=20000*86400+100;
+  let calls=0;const {env}=setup(t,async()=>{if(++calls===1)throw new Error('3040: Capacity temporarily exceeded');return {response:'Recovered. [1]'}}),now=20000*86400+100;
   assert.equal((await answerWithWorkersAI(request(),env,body(),{now})).mode,'fallback');
   assert.equal((await answerWithWorkersAI(request(),env,body(),{now:now+29})).mode,'fallback');assert.equal(calls,1);
   assert.equal((await answerWithWorkersAI(request(),env,body(),{now:now+31})).mode,'ai');
@@ -95,4 +95,36 @@ test('API mode metadata is readiness, and POST reports actual inference result',
   assert.deepEqual(await (await onRequest({request:request(),env})).json(),{aiAvailable:true});
   const input=body();const req=new Request('https://example.test/api/advisor',{method:'POST',headers:{'Content-Type':'application/json','CF-Connecting-IP':'192.0.2.1'},body:JSON.stringify(input)});
   assert.equal((await (await onRequest({request:req,env})).json()).mode,'ai');
+});
+
+
+test('short answers cite only supplied website entries; unsupported answers admit missing evidence',()=>{
+  const messages=buildMessages('Which glass should I use?',[],{});
+  const refs=JSON.parse(messages.at(-1).content).references;
+  assert.ok(refs.slice(0,3).every(r=>r.category==='Windows'));
+  assert.ok(refs.filter(r=>r.kind==='website').every(r=>!r.description.toLowerCase().includes('low-e')));
+  assert.equal(refs.filter(r=>r.kind==='external').length,1);
+  assert.match(refs.find(r=>r.kind==='external').description,/Low-E/);
+  const answer=validateGroundedAnswer('Triple glazing has a third glass layer. [1]',messages,'en');
+  assert.ok(answer.includes('Website sources: [1]'));
+  assert.throws(()=>validateGroundedAnswer('Uncited claim.',messages,'en'),/invalid_sources/);
+  assert.throws(()=>validateGroundedAnswer('Unknown source. [99]',messages,'en'),/invalid_sources/);
+  assert.throws(()=>validateGroundedAnswer('word '.repeat(66)+'[1]',messages,'en'),/answer_length/);
+  assert.match(validateGroundedAnswer('INSUFFICIENT',messages,'en'),/does not contain enough/);
+  assert.equal(MAX_OUTPUT_TOKENS,128);
+});
+test('previous assistant speculation is not recycled as evidence',()=>{
+  const messages=buildMessages('What about indoor air?',[
+    {role:'user',content:'Which glass?'},{role:'assistant',content:'UNSUPPORTED Low-E removes chemicals.'}
+  ],{});
+  assert.doesNotMatch(JSON.stringify(messages),/UNSUPPORTED/);
+});
+test('external sources are server-owned, cited separately and added only for relevant questions',async t=>{
+  const {env}=setup(t,async()=>({response:'Low-E coatings reflect heat energy. [5]'}));
+  const result=await answerWithWorkersAI(request(),env,body({question:'What does Low-E glass do?'}));
+  assert.equal(result.mode,'ai');assert.equal(result.sources.length,1);
+  assert.match(result.sources[0].url,/^https:\/\/www\.energy\.gov\//);
+  assert.doesNotMatch(result.answer,/Website sources/);
+  const unrelated=buildMessages('Compare cellulose and mineral wool',[],{});
+  assert.ok(JSON.parse(unrelated.at(-1).content).references.every(r=>r.kind==='website'));
 });

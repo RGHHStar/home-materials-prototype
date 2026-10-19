@@ -95,6 +95,9 @@ export const SYSTEM_KEYWORDS = {
     "window",
     "windows",
     "glazing",
+    "glass",
+    "low e",
+    "verre",
     "fenetre",
     "fenetres",
     "vitrage"
