@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="learning-article.css" />
     <link rel="stylesheet" href="auth.css" />
     <link rel="stylesheet" href="feedback.css" />
+    <link rel="stylesheet" href="agent-ui.css" />
   </head>
   <body>
     <header class="site-header">
@@ -421,6 +422,32 @@
       </div>
     </dialog>
 
+
+    <!-- The advisor is built inside the website, not a disconnected external tab. -->
+    <button id="ed-agent-launcher" type="button" aria-haspopup="dialog" aria-controls="ed-agent-panel" aria-expanded="false">
+      <span class="ed-agent-launch-icon" aria-hidden="true">✦</span><span id="ed-agent-launch-label">Ask EverDwell</span><span class="ed-agent-sparkle" aria-hidden="true">↗</span>
+    </button>
+    <aside id="ed-agent-panel" role="dialog" aria-modal="false" aria-labelledby="ed-agent-title" hidden>
+      <div class="ed-agent-head">
+        <div class="ed-agent-logo" aria-hidden="true">✧</div>
+        <div class="ed-agent-title"><strong id="ed-agent-title">EverDwell Advisor</strong>
+          <span class="ed-agent-status"><span class="ed-agent-dot" aria-hidden="true"></span><span id="ed-agent-status-text">Catalogue guidance mode</span></span>
+        </div>
+        <div class="ed-agent-head-actions">
+          <button id="ed-agent-clear" class="ed-agent-iconbtn" type="button" aria-label="Clear conversation" title="Clear conversation">↺</button>
+          <button id="ed-agent-close" class="ed-agent-iconbtn" type="button" aria-label="Close AI advisor" title="Close AI advisor">×</button>
+        </div>
+      </div>
+      <div id="ed-agent-transcript" class="ed-agent-transcript" role="log" aria-live="polite" aria-relevant="additions text">
+        <section class="ed-agent-welcome"><span class="ed-agent-eyebrow">EVERDWELL · HOME INTELLIGENCE</span><h3 id="ed-agent-greeting">Your home, better informed.</h3><p id="ed-agent-intro">Compare materials using the EverDwell reference catalogue.</p></section>
+      </div>
+      <div class="ed-agent-bottom">
+        <form id="ed-agent-form" autocomplete="off"><textarea id="ed-agent-input" rows="2" maxlength="1500" aria-label="Ask a question" placeholder="Ask about your home or materials…"></textarea>
+          <button id="ed-agent-send" class="ed-agent-send" type="submit" aria-label="Send question" disabled>➤</button></form>
+        <p id="ed-agent-note" class="ed-agent-note">Verify professional building-code and contractor advice.</p>
+      </div>
+    </aside>
+
     <script src="auth-config.js"></script>
     <script src="auth.js"></script>
     <script src="feedback.js"></script>
@@ -428,5 +455,6 @@
     <script src="carbon-article.js"></script>
     <script src="home-manifesto.js"></script>
     <script src="app.js"></script>
+    <script src="agent-bridge.js"></script>
   </body>
 </html>

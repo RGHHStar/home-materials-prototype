@@ -1,0 +1,69 @@
+/* EverDwell AI Advisor: isolated styles, safe alongside the original design. */
+#ed-agent-launcher,#ed-agent-panel,#ed-agent-panel *{box-sizing:border-box}
+#ed-agent-launcher{
+  position:fixed;z-index:999991;right:23px;bottom:23px;display:flex;align-items:center;
+  gap:11px;padding:14px 19px 14px 15px;border:1px solid rgba(255,255,255,.3);
+  border-radius:48px;background:#1d6449;color:#fff;font:600 14px/1.2 system-ui,-apple-system,'Segoe UI',sans-serif;
+  box-shadow:0 11px 30px rgba(15,63,45,.27);cursor:pointer;transition:transform .15s,box-shadow .15s;
+}
+#ed-agent-launcher:hover{transform:translateY(-2px);box-shadow:0 14px 35px rgba(15,63,45,.33)}
+#ed-agent-launcher:focus-visible{outline:3px solid #ffc65c;outline-offset:3px}
+#ed-agent-launcher[hidden]{display:none!important}
+#ed-agent-launcher .ed-agent-launch-icon{display:grid;place-items:center;width:27px;height:27px;background:rgba(255,255,255,.17);border-radius:50%;font-size:17px}
+#ed-agent-launcher .ed-agent-sparkle{font-size:15px;margin-left:3px;color:#c6e6ce}
+#ed-agent-panel{
+  --ed-ink:#183a2f;--ed-green:#236b51;--ed-border:#e1e9e2;
+  position:fixed;z-index:999992;right:21px;bottom:21px;
+  width:min(428px,calc(100vw - 28px));height:min(677px,calc(100vh - 40px));
+  display:flex;flex-direction:column;overflow:hidden;border-radius:23px;
+  border:1px solid rgba(24,58,47,.1);background:#fff;color:var(--ed-ink);
+  font:14px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif;
+  box-shadow:0 23px 75px rgba(17,43,35,.29),0 1px 4px rgba(17,43,35,.1)
+}
+#ed-agent-panel[hidden]{display:none!important}
+#ed-agent-panel button,#ed-agent-panel textarea{font:inherit}
+#ed-agent-panel button:focus-visible,#ed-agent-panel textarea:focus-visible{outline:2px solid #46a47e;outline-offset:2px}
+.ed-agent-head{display:flex;gap:11px;align-items:center;padding:16px 16px 14px;background:linear-gradient(125deg,#1b6349,#328667);color:#fff;flex-shrink:0}
+.ed-agent-logo{flex-shrink:0;width:38px;height:38px;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:14px;font-size:20px}
+.ed-agent-title{flex:1;min-width:0}
+.ed-agent-title strong{font-size:15px;line-height:1.25;display:block;color:#fff}
+.ed-agent-status{font-size:11px;opacity:.92;display:flex;align-items:center;gap:6px;margin-top:3px}
+.ed-agent-dot{height:7px;width:7px;display:inline-block;background:#a9f2c3;border-radius:50%;box-shadow:0 0 0 3px rgba(169,242,195,.12)}
+.ed-agent-head-actions{display:flex;gap:5px}
+#ed-agent-panel .ed-agent-iconbtn{border:0;display:grid;place-items:center;width:32px;height:32px;color:#fff;background:transparent;border-radius:9px;cursor:pointer;font-size:19px;line-height:1}
+#ed-agent-panel .ed-agent-iconbtn:hover{background:rgba(255,255,255,.15)}
+.ed-agent-transcript{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:21px 17px 12px;background:linear-gradient(180deg,#f6f9f6,#fff 30%);scrollbar-color:#b9cec0 transparent}
+.ed-agent-welcome{padding:16px;background:#edf6ef;border:1px solid #d8e8db;border-radius:15px;margin-bottom:17px}
+.ed-agent-welcome .ed-agent-eyebrow{display:block;font-size:10px;letter-spacing:.12em;font-weight:800;color:#397759;text-transform:uppercase;margin-bottom:8px}
+.ed-agent-welcome h3{margin:0 0 5px;color:#184d37;font-size:18px;font-weight:750;line-height:1.25}
+.ed-agent-welcome p{margin:0;color:#436352;font-size:12px;line-height:1.52}
+.ed-agent-suggestions{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0 17px}
+#ed-agent-panel .ed-agent-prompt{background:#fff;border:1px solid #cbded2;border-radius:20px;padding:7px 11px;color:#256349;font-size:11.5px;line-height:1.28;cursor:pointer}
+#ed-agent-panel .ed-agent-prompt:hover{background:#e4f2e9}
+.ed-agent-entry{display:flex;gap:9px;align-items:flex-start;margin:0 0 16px}
+.ed-agent-entry.user{flex-direction:row-reverse}
+.ed-agent-avatar{width:27px;height:27px;flex-shrink:0;border-radius:10px;background:#e2efe6;display:grid;place-items:center;color:#1d6748;font-size:12px;font-weight:750}
+.ed-agent-entry.user .ed-agent-avatar{background:#dae7ea;color:#385b61}
+.ed-agent-bubble{max-width:calc(100% - 39px);overflow-wrap:anywhere;background:#f2f5f3;border:1px solid #e7ece7;border-radius:5px 15px 15px 15px;padding:10px 13px;font-size:12.8px;color:#20362c;line-height:1.63;white-space:pre-wrap}
+.ed-agent-entry.user .ed-agent-bubble{background:#236b51;border-color:#236b51;color:#fff;border-radius:15px 5px 15px 15px}
+.ed-agent-bubble strong{font-weight:750}
+.ed-agent-bubble code{font:12px ui-monospace,SFMono-Regular,Consolas,monospace;padding:1px 3px;border-radius:4px;background:rgba(75,100,82,.09)}
+.ed-agent-entry.pending .ed-agent-bubble{color:#60796c;font-style:italic}
+.ed-agent-bottom{flex-shrink:0;padding:12px 14px 13px;background:#fff;border-top:1px solid #e6eee8}
+#ed-agent-form{display:flex;gap:7px;align-items:flex-end;padding:6px 6px 6px 12px;border:1px solid #cadbcd;border-radius:17px;background:#fbfdfb;transition:border-color .15s}
+#ed-agent-form:focus-within{border-color:#338263;box-shadow:0 0 0 2px rgba(54,141,99,.1)}
+#ed-agent-input{min-width:0;flex:1;resize:none;min-height:42px;max-height:105px;overflow-y:auto;border:0!important;box-shadow:none!important;outline:0!important;background:transparent;color:#1b3b2d;padding:9px 1px;font-size:13px!important;line-height:1.35}
+#ed-agent-input::placeholder{color:#8c9e91}
+#ed-agent-panel .ed-agent-send{width:35px;height:35px;display:grid;place-items:center;border:0;border-radius:12px;color:#fff;background:#236b51;cursor:pointer;font-size:19px;flex-shrink:0;margin-bottom:2px}
+#ed-agent-panel .ed-agent-send:hover{background:#15543b}
+#ed-agent-panel .ed-agent-send:disabled{background:#a9c4b5;cursor:not-allowed}
+.ed-agent-note{font-size:10px;color:#7c8e82;text-align:center;margin:8px 4px 0;line-height:1.35}
+@media (max-width:620px){
+  #ed-agent-launcher{right:14px;bottom:17px;padding:12px 15px;font-size:13px}
+  #ed-agent-panel{right:8px;left:8px;bottom:8px;width:auto;height:calc(100dvh - 16px);max-height:calc(100vh - 16px);border-radius:17px}
+  .ed-agent-head{padding:13px 13px 11px}
+  .ed-agent-transcript{padding:16px 13px}
+}
+@media (prefers-reduced-motion:reduce){#ed-agent-launcher{transition:none}}
+.ed-agent-error{color:#87371f;background:#fff3ed;border-left:3px solid #b76b43;padding:10px 12px;font-size:13px;line-height:1.5}
+#ed-agent-panel .ed-agent-iconbtn:disabled{opacity:.5}

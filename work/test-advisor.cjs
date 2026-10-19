@@ -1,0 +1,75 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/user/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+(async()=>{
+  const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'});
+  const output=path.resolve(__dirname,'../.wrangler/advisor-qa');fs.mkdirSync(output,{recursive:true});
+  try {
+    const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[],questions=[];
+    page.on('pageerror',e=>errors.push(e.message));
+    page.on('request',r=>{if(r.url().endsWith('/api/advisor')&&r.method()==='POST')questions.push(r.postDataJSON());});
+    // Existing login is only opened, never submitted; no real user or mail operations.
+    await page.goto('http://127.0.0.1:4173/#home');
+    await page.locator('[data-lang="en"]').click();
+    await page.locator('#ed-agent-launcher').click();
+    await page.waitForFunction(()=>document.querySelector('#ed-agent-status-text').textContent==='Catalogue guidance mode');
+    assert.equal(questions.length,0);
+    await page.locator('.ed-agent-prompt').first().click();
+    await page.waitForFunction(()=>document.querySelectorAll('.ed-agent-entry.assistant:not(.pending)').length===1);
+    assert.match(await page.locator('.ed-agent-entry.assistant').innerText(),/Cellulose/);
+    assert.match(await page.locator('.ed-agent-entry.assistant').innerText(),/Mineral Wool/i);
+    await page.waitForFunction(()=>getComputedStyle(document.querySelector('.home-intro h2 span')).opacity==='1');
+    await page.screenshot({path:path.join(output,'desktop.png')});
+    await page.locator('#ed-agent-clear').click();
+    assert.equal(await page.locator('.ed-agent-entry').count(),0);
+    await page.evaluate(()=>{state.builderSelections.structural=0;});
+    await page.locator('#ed-agent-input').fill('Improve my current design');
+    await page.locator('#ed-agent-send').click();
+    await page.waitForFunction(()=>document.querySelectorAll('.ed-agent-entry.assistant:not(.pending)').length===1);
+    assert.match(await page.locator('.ed-agent-entry.assistant').innerText(),/current selections/);
+    assert.equal(questions.at(-1).context.selections[0].system_id,'structural');
+    await page.locator('#ed-agent-clear').click();
+    await page.locator('#ed-agent-close').click();
+    await page.locator('[data-lang="fr"]').click();
+    await page.locator('#ed-agent-launcher').click();
+    await page.locator('.ed-agent-prompt').first().click();
+    await page.waitForFunction(()=>document.querySelectorAll('.ed-agent-entry.assistant:not(.pending)').length===1);
+    assert.match(await page.locator('.ed-agent-entry.assistant').innerText(),/prix/);
+    assert.equal(questions.at(-1).context.language,'fr');
+    assert.match(await page.locator('#ed-agent-note').innerText(),/sans IA/);
+    await page.setViewportSize({width:390,height:844});
+    const panel=await page.locator('#ed-agent-panel').boundingBox();
+    assert.ok(panel.x>=0&&panel.x+panel.width<=391&&panel.y>=0&&panel.y+panel.height<=845);
+    await page.screenshot({path:path.join(output,'mobile-fr.png')});
+    // Network failure restores draft, and a retry works.
+    await page.locator('#ed-agent-clear').click();
+    await page.route('**/api/advisor',route=>route.request().method()==='POST'?route.abort():route.continue());
+    await page.locator('#ed-agent-input').fill('Compare windows');await page.locator('#ed-agent-send').click();
+    await page.locator('.ed-agent-error').waitFor();assert.equal(await page.locator('#ed-agent-input').inputValue(),'Compare windows');
+    await page.unroute('**/api/advisor');
+    await page.locator('#ed-agent-send').click();
+    await page.waitForFunction(()=>document.querySelectorAll('.ed-agent-entry.assistant:not(.pending)').length===1);
+    // Clear while a request is pending must not resurrect its late response.
+    await page.locator('#ed-agent-clear').click();
+    let release;const delay=new Promise(resolve=>release=resolve);
+    await page.route('**/api/advisor',async route=>{if(route.request().method()!=='POST')return route.continue();await delay;try{await route.fulfill({json:{answer:'late reply',mode:'guide',aiAvailable:false}});}catch{}});
+    await page.locator('#ed-agent-input').fill('cellulose');await page.locator('#ed-agent-send').click();
+    await page.locator('.ed-agent-entry.pending').waitFor();await page.locator('#ed-agent-clear').click();release();
+    await page.waitForTimeout(200);assert.equal(await page.locator('.ed-agent-entry').count(),0);
+    await page.unroute('**/api/advisor');
+    await page.keyboard.press('Escape');assert.equal(await page.locator('#ed-agent-panel').isVisible(),false);
+    assert.equal(await page.evaluate(()=>document.activeElement.id),'ed-agent-launcher');
+    // Existing navigation and sign-in dialog still operate beside the new panel.
+    await page.setViewportSize({width:1440,height:1000});
+    await page.locator('[data-lang="en"]').click();
+    await page.locator('#home-feedback [data-route="feedback"]').click();
+    assert.ok(await page.locator('[data-view="feedback"]').isVisible());
+    await page.locator('#auth-open').click();assert.ok(await page.locator('#auth-dialog').isVisible());
+    await page.keyboard.press('Escape');
+    await page.locator('#ed-agent-launcher').click();assert.ok(await page.locator('#ed-agent-panel').isVisible());
+    await page.reload();await page.locator('#ed-agent-launcher').click();assert.equal(await page.locator('.ed-agent-entry').count(),0);
+    assert.deepEqual(errors,[]);
+    console.log('PASS: desktop/mobile EN/FR, catalogue responses, builder context, no eager disclosure, retry, clear race, keyboard, original feedback/login, reload privacy.');
+  } finally {await browser.close();}
+})().catch(error=>{console.error(error);process.exitCode=1;});
