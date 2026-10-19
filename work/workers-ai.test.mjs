@@ -109,9 +109,9 @@ test('short answers cite only supplied website entries; unsupported answers admi
   assert.ok(answer.includes('Website sources: [1]'));
   assert.throws(()=>validateGroundedAnswer('Uncited claim.',messages,'en'),/invalid_sources/);
   assert.throws(()=>validateGroundedAnswer('Unknown source. [99]',messages,'en'),/invalid_sources/);
-  assert.throws(()=>validateGroundedAnswer('word '.repeat(66)+'[1]',messages,'en'),/answer_length/);
+  assert.throws(()=>validateGroundedAnswer('word '.repeat(101)+'[1]',messages,'en'),/answer_length/);
   assert.match(validateGroundedAnswer('INSUFFICIENT',messages,'en'),/does not contain enough/);
-  assert.equal(MAX_OUTPUT_TOKENS,128);
+  assert.equal(MAX_OUTPUT_TOKENS,192);
 });
 test('previous assistant speculation is not recycled as evidence',()=>{
   const messages=buildMessages('What about indoor air?',[

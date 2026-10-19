@@ -21,7 +21,7 @@ Official sources: [model](https://developers.cloudflare.com/workers-ai/models/ll
 
 Chat stays in page memory; reload or Clear discards it. AI receives the question, at most two recent user messages (previous AI answers are excluded), known selected materials, coarse assessment categories and bounded catalogue references. Account email, authentication tokens and individual questionnaire answers are not collected for this request. Common email/credential patterns in typed messages are redacted; this is not a general personal-data detector, so the UI asks users not to include personal details. The endpoint does not log or store conversations.
 
-Prompts are capped at 12,000 UTF-8 bytes, history messages at 400 characters, questions at 1,500 characters and output at 128 tokens. Instructions request EN/FR grounded qualitative comparisons, no prices, numeric sustainability ratings or rankings, and no claimed browsing, image analysis or inspection. A narrow output check rejects obvious price/rating violations; it does not guarantee factual correctness.
+Prompts are capped at 12,000 UTF-8 bytes, history messages at 400 characters, questions at 1,500 characters and output at 192 tokens. Instructions request EN/FR grounded qualitative comparisons, no prices, numeric sustainability ratings or rankings, and no claimed browsing, image analysis or inspection. A narrow output check rejects obvious price/rating violations; it does not guarantee factual correctness.
 
 Isolated D1 tables `advisor_cf_usage` and `advisor_cf_state` store only salted visitor hashes, request IDs, timestamps and cooldown time. Existing feedback tables are untouched. Atomic reservations cap AI calls at 6/minute and 30/rolling 24 hours per visitor, and 100/UTC day across the site. These abuse caps are not estimates of Neuron consumption. Rows older than two days are removed on subsequent AI requests.
 
@@ -43,7 +43,7 @@ The user authorized this publishing assistant to configure free AI, upload to Gi
 
 ## Short answers and source grounding — 2026-10-19
 
-Default answers target 35–50 words in 2–3 sentences, with a 65-word validation limit and 128-token generation cap. Catalogue fallback is also shortened. Output-token capacity is one third of the original; total Neuron use is not reduced by that exact ratio because inputs also count.
+Default answers target 65–90 words in one paragraph of 4–7 short sentences, with a 100-word validation limit and 192-token generation cap. Catalogue fallback is also shortened. Output-token capacity is half of the original; total Neuron use is not reduced by that exact ratio because inputs also count.
 
 Website material records remain the main evidence. Relevant window questions can additionally use one reviewed US Department of Energy excerpt from `functions/_advisor/supplements.mjs`, with a separate external-source link. This is a curated reference, not live web search. No search API or paid service is added.
 
