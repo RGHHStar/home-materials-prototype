@@ -1,37 +1,42 @@
-# EverDwell advisor — Cloudflare port
+# EverDwell advisor — Cloudflare Workers AI
 
-Adapted from the teacher-provided `EverDwell_AI_Agent_Streamlit_GitHub_Repo` on 2026-10-18. The chat layout, English/French copy, page-context collection, material retrieval, assessment guidance and builder suggestions originate from that version. Streamlit transport and Python execution have been replaced with a same-origin Cloudflare Pages Function. Existing authentication, feedback, mail and admin files are unchanged.
+The main website uses a same-origin Pages Function at `/api/advisor`. Configured requests call Cloudflare Workers AI; unavailable AI returns clearly labelled catalogue guidance. No OpenAI API key or paid-provider fallback is used. Existing authentication, feedback, mail and admin code is unchanged.
 
-## Current release
+## Production configuration
 
-The user selected **catalogue guidance mode**. No API key is required. The UI explicitly labels this mode; answers are deterministic catalogue guidance, not free-form AI. Full questions should name the materials. It covers 62 options in 13 systems and four detailed insulation references, using the current site's data. Questions do not trigger external AI calls in this mode. There is no image processing or web search.
+In the existing Pages project's production settings, preserve all existing variables and bindings and add:
 
-The chat stays in page memory and is lost on reload. Clear cancels pending UI requests and discards late responses. Requests contain the question, limited recent conversation, selected materials and summarized assessment scores, but not authentication tokens, email or individual questionnaire answers. Neither chat nor assessment is saved by the endpoint. Standard hosting request metadata is separate from chat storage.
+- Workers AI binding: `AI`.
+- Secret: `ADVISOR_RATE_SALT`, at least 32 random characters (a hashing salt, not a provider credential).
+- Text variable: `AI_FREE_TIER_CONFIRMED=true`, only after verifying Workers Free.
+- Keep the existing D1 binding `FEEDBACK_DB`.
+
+Settings take effect on the next deployment through GitHub main → Cloudflare Pages. GET `/api/advisor` reports readiness; only a POST result with `mode: "ai"` confirms inference. Each UI answer identifies its actual source.
+
+The fixed model is `@cf/meta/llama-3.1-8b-instruct-fp8`. Workers Free includes 10,000 Neurons/day, reset at 00:00 UTC, and rejects further calls after that allowance. Never upgrade or enable paid fallback without new user authorization. If the account plan changes, disable `AI_FREE_TIER_CONFIRMED` and review protection first: the flag records verification and does not query the plan per request. Workers Free was confirmed in the account dashboard on 2026-10-18.
+
+Official sources: [model](https://developers.cloudflare.com/workers-ai/models/llama-3.1-8b-instruct-fp8/), [pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/), [Pages bindings](https://developers.cloudflare.com/pages/functions/bindings/#workers-ai), [errors](https://developers.cloudflare.com/workers-ai/platform/errors/).
+
+## Privacy and usage
+
+Chat stays in page memory; reload or Clear discards it. AI receives the question, at most four recent messages, known selected materials, coarse assessment categories and bounded catalogue references. Account email, authentication tokens and individual questionnaire answers are not collected for this request. Common email/credential patterns in typed messages are redacted; this is not a general personal-data detector, so the UI asks users not to include personal details. The endpoint does not log or store conversations.
+
+Prompts are capped at 12,000 UTF-8 bytes, history messages at 700 characters, questions at 1,500 characters and output at 384 tokens. Instructions request EN/FR grounded qualitative comparisons, no prices, numeric sustainability ratings or rankings, and no claimed browsing, image analysis or inspection. A narrow output check rejects obvious price/rating violations; it does not guarantee factual correctness.
+
+Isolated D1 tables `advisor_cf_usage` and `advisor_cf_state` store only salted visitor hashes, request IDs, timestamps and cooldown time. Existing feedback tables are untouched. Atomic reservations cap AI calls at 6/minute and 30/rolling 24 hours per visitor, and 100/UTC day across the site. These abuse caps are not estimates of Neuron consumption. Rows older than two days are removed on subsequent AI requests.
+
+Daily quota error 3036 triggers cooldown until UTC midnight; temporary capacity/rate failures trigger 30 seconds. Missing trusted client IP/storage, invalid output, errors and timeouts return catalogue guidance. The next eligible question tries AI again. There are no automatic inference retries. Network retries reuse a request ID. The 20-second response timeout cannot cancel a provider invocation already in flight; its reservation remains consumed.
 
 ## Files and checks
 
-- `functions/_advisor/recognition.mjs` recognizes canonical material names, curated English/French/Chinese aliases, categories, intents and focus keywords before catalogue routing. Longest overlapping names win; material order is preserved while a sorted `answerKey` makes reversed comparisons equivalent for the future authored answer library. This is bounded keyword matching, not unrestricted language understanding or typo correction.
-- Questions such as “窗户有什么差异” route to the windows category; “rock wool vs fiberglass” resolves the two canonical materials. An incomplete comparison asks for the other material. The current UI still answers in its English/French language setting.
-- Material summaries no longer display price or numeric sustainability ratings. The existing description text and builder/assessment answer branches have not yet been rewritten into the requested original long-form answer library. Focus and pros/cons labels are ready for that library; they do not yet produce bespoke answers for each focus.
-- Recognition regression checks: `node --test work/advisor.test.mjs work/recognition.test.mjs`, including all 62 single materials, 3,782 ordered pairs, six orders of a sample triple, French names and Chinese aliases.
+- `agent-bridge.js`: UI, context, transport and answer provenance.
+- `functions/api/advisor.js`: request validation and readiness.
+- `functions/_advisor/workers-ai.mjs`: bounded prompts, AI binding, limits and fallback.
+- `functions/_advisor/core.mjs`: catalogue guidance.
+- `functions/_advisor/recognition.mjs`: aliases and intent recognition for 62 materials in 13 systems; bounded keyword matching.
 
-- `agent-ui.css`, `agent-bridge.js`, advisor markup in `index.html`: UI and same-origin transport.
-- `functions/api/advisor.js`: mode metadata and validated question endpoint.
-- `functions/_advisor/`: canonical catalogue, bilingual reference guidance and optional AI adapter.
-- After material edits, run `node work/export-advisor-catalog.cjs`; validate with `--check`.
-- Run `node --test work/advisor.test.mjs` for offline functional, request validation and mocked AI/quota tests.
-- Local preview: `node work/advisor-preview.mjs` (port 4173, no real feedback/mail/admin API).
-- Windows shortcut: double-click `preview-local.cmd`, keep that window open, and visit `http://127.0.0.1:4173/`. Directly opening `index.html` cannot run the question endpoint. If a preview is already running, use its URL rather than starting another copy.
-- UI checks: `node work/test-advisor.cjs` with preview running. `PLAYWRIGHT_MODULE` may specify the installed Playwright module path.
+Run `node --test work/advisor.test.mjs work/recognition.test.mjs work/workers-ai.test.mjs` and `node work/export-advisor-catalog.cjs --check`. All 22 tests passed on 2026-10-18, covering 3,782 ordered material pairs, EN/FR follow-up prompts, binding prerequisites, successful mocked inference, storage failure, duplicate IDs, limits, cooldown/recovery, timeout and fallback. Provider tests use mocks; production requires separate live verification.
 
-## Optional future live AI
+Local catalogue preview: `node work/advisor-preview.mjs` on port 4173. `work/test-advisor.cjs` checks that preview's UI. Advisor verification must not submit real feedback or send emails.
 
-Server-only `OPENAI_API_KEY` enables the existing Responses API adapter; optional `OPENAI_MODEL` defaults to the teacher's `gpt-4.1-mini`. Never put keys in source or browser code. No key is supplied by this release. See [OpenAI text generation documentation](https://developers.openai.com/api/docs/guides/text).
-
-Paid calls require the existing `FEEDBACK_DB` binding and Cloudflare's connecting-IP header. An isolated `advisor_usage` table is created only when paid mode is enabled; it stores request IDs, salted visitor hashes and timestamps, never conversations or raw IP. Atomic reservations cap usage at 6 calls/minute and 30/day per visitor, and 300/day globally. Repeated request IDs are not charged twice. Entries older than two days are removed on subsequent paid requests. Limits are approximate abuse/cost protection, not a currency spending limit. Missing quota storage, provider errors or exhausted limits return clearly labeled catalogue fallback. No schema or data belonging to feedback/admin is modified.
-
-Deploy through the existing GitHub main → Cloudflare Pages workflow. `_routes.json` already covers `/api/*`; no new deployment platform or dependency installation is required for the website.
-
-The user clarified on 2026-10-18 that this chat handles design, code changes and checks only. This release is saved locally; this chat does not push to GitHub or deploy it. The publisher should verify the deployed `/api/advisor` GET returns JSON with `aiAvailable:false`, then ask an English/French material question in the site UI. A local build does not confirm production deployment.
-
-Local validation on 2026-10-18: 8 automated backend tests passed; desktop/mobile EN/FR browser checks passed, including comparison, builder context, retries, clear while pending, keyboard closure and existing feedback/login UI. Wrangler 4.45.0 compiled the full Pages Functions worker successfully. No live AI, feedback submission or email sending was performed. The repository's original feedback/admin code is unchanged.
+The user authorized this publishing assistant to configure free AI, upload to GitHub and verify the live website. Save releases with normal commits; preserve previous versions and avoid force pushes.

@@ -2,7 +2,7 @@
 import catalog from './catalog.mjs';
 import {normalize, recognizeQuestion} from './recognition.mjs';
 export {normalize, recognizeQuestion} from './recognition.mjs';
-import {ASSESSMENT_TIPS, SYSTEM_INSTRUCTIONS, STOPWORDS} from './reference.mjs';
+import {ASSESSMENT_TIPS, STOPWORDS} from './reference.mjs';
 
 const stopwords = new Set(STOPWORDS);
 const words = value => new Set(normalize(value).split(' ').filter(w=>w.length>2&&!stopwords.has(w)));
@@ -57,7 +57,7 @@ export function referenceAnswer(question, rawContext={}) {
     :'**Safety first:** Do not drill, sand, cut, or remove suspected asbestos-containing or lead-painted materials yourself. For dampness or mould, ask a qualified professional for a safe inspection. A description alone cannot confirm hazardous materials.\n\nI can compare replacement materials using the EverDwell catalogue.';
   if(['assessment','my scores','my score','questionnaire','evaluation','evalue','mon bilan','my results'].some(k=>q.includes(k))) {
     const scores=Object.entries(ctx.assessment).sort((a,b)=>b[1]-a[1]).slice(0,3);
-    if(scores.length) return (fr?'Priorités suggérées selon vos réponses (un score d’impact plus élevé mérite davantage d’attention) :':'Suggested priorities based on your assessment answers (higher impact scores deserve more attention):')+'\n'+scores.map(([key,score])=>`- **${score}/100** — ${ASSESSMENT_TIPS[key][fr?1:0]}`).join('\n')+'\n\n'+(fr?'Ce questionnaire ne remplace pas un audit énergétique ou une inspection.':'These questionnaire scores are not a professional energy audit or inspection.');
+    if(scores.length) return (fr?'Points à examiner selon vos réponses :':'Areas to review based on your assessment answers:')+'\n'+scores.map(([key])=>`- ${ASSESSMENT_TIPS[key][fr?1:0]}`).join('\n')+'\n\n'+(fr?'Ce questionnaire ne remplace pas un audit énergétique ou une inspection.':'This questionnaire is not a professional energy audit or inspection.');
     return fr?'Complétez d’abord quelques questions dans « Évaluation du logement », puis demandez-moi d’expliquer vos résultats.':'Answer questions in Home assessment first, then ask me to explain your results.';
   }
   if(['my design','my home','my selections','current design','selected','ma conception','mes choix','ma maison'].some(k=>q.includes(k))) {
@@ -65,10 +65,9 @@ export function referenceAnswer(question, rawContext={}) {
     const suggestions=[];
     for(const s of ctx.selections) {
       const current=entries.find(e=>e.kind==='plan'&&e.system_id===s.system_id&&e.name_en===s.material);
-      const best=entries.filter(e=>e.kind==='plan'&&e.system_id===s.system_id).sort((a,b)=>b.score-a.score)[0];
-      if(best.score>current.score+6) suggestions.push(fr?`- ${current.system_fr} : étudiez **${best.name_fr}** (${best.score}/100) au lieu de **${current.name_fr}** (${current.score}/100).`:`- ${current.system_en}: consider **${best.name_en}** (${best.score}/100) instead of **${current.name_en}** (${current.score}/100).`);
+      suggestions.push(`- ${current['system_'+lang]}: **${current['name_'+lang]}** — ${current['description_'+lang]}`);
     }
-    return (fr?'D’après vos choix actuels dans l’outil de conception :':'Based on your current selections in the home builder:')+'\n'+(suggestions.slice(0,4).join('\n')||(fr?'Vos choix ont déjà de bonnes notes dans le catalogue.':'Your selected options already score well within the catalogue.'))+'\n\n'+(fr?'Scores comparatifs du prototype, pas une étude technique. Vérifiez le climat, la compatibilité et les devis.':'These are prototype comparison scores, not engineering recommendations. Verify climate, compatibility and contractor quotes.');
+    return (fr?'Propriétés à examiner pour vos choix actuels :':'For your current selections, consider these material properties:')+'\n'+suggestions.slice(0,4).join('\n')+'\n\n'+(fr?'Informations du prototype, pas une étude technique. Vérifiez le climat, la compatibilité et la pose.':'Prototype reference information, not engineering recommendations. Verify climate, compatibility and installation.');
   }
   const recognized=recognizeQuestion(question), mentions=findMentions(question);
   const comparison=recognized.intent==='compare';
@@ -83,21 +82,10 @@ export function referenceAnswer(question, rawContext={}) {
   if(choices.length) return heading+'\n\n'+choices.map(e=>details(e,lang)).join('\n\n');
   return fr?'Je peux comparer les matériaux d’isolation, fenêtres, toitures, planchers, peintures et autres options du catalogue EverDwell. Essayez « Comparer la cellulose et la laine minérale ».\n\nVous utilisez le guide du catalogue, sans IA conversationnelle. Posez une question complète en nommant les matériaux.':'I can compare insulation, windows, roofing, flooring, paints and other EverDwell catalogue options. Try “Compare cellulose and mineral wool”.\n\nThis is catalogue guidance, not live conversational AI. Ask a complete question naming the materials.';
 }
-export async function generateAnswer(question,history,context,{apiKey='',model='gpt-4.1-mini',fetcher=fetch}={}) {
+// Catalogue-only helper; production AI is exclusively the Cloudflare binding adapter.
+export async function generateAnswer(question,history,context) {
   const ctx=sanitizeContext(context);
-  if(!apiKey) return {answer:referenceAnswer(question,ctx),mode:'guide',aiAvailable:false};
-  const safeHistory=(Array.isArray(history)?history:[]).slice(-10).filter(m=>m&&['user','assistant'].includes(m.role)&&typeof m.content==='string').map(m=>({role:m.role,content:m.content.slice(0,2400)}));
-  const prompt=JSON.stringify({question,recognized:recognizeQuestion(question),language:ctx.language,pageContext:ctx,references:selectReferences(question,ctx)});
-  try {
-    const response=await fetcher('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({model,instructions:SYSTEM_INSTRUCTIONS+`\nAnswer in ${ctx.language==='fr'?'French':'English'}.`,input:[...safeHistory,{role:'user',content:prompt}],max_output_tokens:800,store:false}),signal:AbortSignal.timeout(22000)});
-    if(!response.ok) throw new Error('provider_unavailable');
-    const result=await response.json();
-    const answer=(result.output||[]).filter(item=>item.type==='message').flatMap(item=>item.content||[]).filter(item=>item.type==='output_text').map(item=>item.text).join('\n').trim();
-    if(!answer) throw new Error('empty_answer');
-    return {answer,mode:'ai',aiAvailable:true};
-  } catch {
-    return fallbackAnswer(question,ctx);
-  }
+  return {answer:referenceAnswer(question,ctx),mode:'guide',aiAvailable:false};
 }
 export function fallbackAnswer(question,context) {
   const fr=context.language==='fr';

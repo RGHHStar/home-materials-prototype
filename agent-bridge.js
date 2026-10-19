@@ -16,18 +16,18 @@
 
   const translations = {
     en: {
-      launcher:"Ask EverDwell",title:"EverDwell Advisor",connected:"AI-powered assistant",guide:"Catalogue guidance mode",loading:"Connecting…",
+      launcher:"Ask EverDwell",title:"EverDwell Advisor",connected:"Cloudflare AI response",ready:"AI ready · catalogue fallback",guide:"Catalogue guidance mode",loading:"Connecting…",
       greeting:"Your home, better informed.",intro:"Compare building materials, explore greener options and get advice based on your current home design.",
       suggestions:["Compare cellulose and mineral wool", "Low-VOC paint options", "Best sustainable roofing", "Improve my current design"],
       placeholder:"Ask about your home or materials…",thinking:"Reviewing your question…",offline:"The advisor could not connect. Your question is still in the input; please try again.",you:"You",guideHint:"Catalogue guidance, not live AI. Questions and selected materials are processed by this site; chat is kept only in this tab. Reference scores and prices need professional verification.",limit:"This conversation has reached 30 questions. Clear it to start again.",
-      hint:"AI mode: questions, recent chat, selected materials and assessment summaries are shared with the AI service. Verify reference prices and professional advice.",reset:"Clear conversation",dismiss:"Close AI advisor",send:"Send question",hello:"Hi! Ask me anything about sustainable-home materials.",
+      hint:"AI mode: Cloudflare processes your question, short chat history, selected materials and assessment summary. This site does not save chat. Do not include personal details. Verify professional advice.",reset:"Clear conversation",dismiss:"Close AI advisor",send:"Send question",hello:"Hi! Ask me anything about sustainable-home materials.",
     },
     fr: {
-      launcher:"Demander à EverDwell",title:"Conseiller EverDwell",connected:"Assistant IA connecté",guide:"Guide du catalogue",loading:"Connexion…",
+      launcher:"Demander à EverDwell",title:"Conseiller EverDwell",connected:"Réponse de Cloudflare AI",ready:"IA prête · catalogue en secours",guide:"Guide du catalogue",loading:"Connexion…",
       greeting:"Mieux connaître votre maison.",intro:"Comparez les matériaux, explorez des options écologiques et obtenez des conseils adaptés à votre projet.",
       suggestions:["Comparer la cellulose et la laine minérale", "Peintures à faible COV", "Une toiture plus durable", "Améliorer ma conception actuelle"],
       placeholder:"Question sur la maison ou les matériaux…",thinking:"J'examine votre question…",offline:"Le conseiller ne peut pas se connecter. Votre question reste dans le champ ; réessayez.",you:"Vous",guideHint:"Guide du catalogue, sans IA en ligne. Ce site traite vos questions et choix de matériaux ; la conversation reste dans cet onglet. Vérifiez les scores et prix auprès de professionnels.",limit:"Cette conversation a atteint 30 questions. Effacez-la pour recommencer.",
-      hint:"Mode IA : questions, historique récent, choix de matériaux et bilan sont partagés avec le service d’IA. Vérifiez les prix et l’avis des professionnels.",reset:"Effacer la conversation",dismiss:"Fermer le conseiller",send:"Envoyer",hello:"Bonjour ! Posez vos questions sur les matériaux pour une maison durable.",
+      hint:"Mode IA : Cloudflare traite la question, un court historique, les matériaux choisis et le bilan. Ce site ne conserve pas la conversation. Évitez les données personnelles. Consultez des professionnels.",reset:"Effacer la conversation",dismiss:"Fermer le conseiller",send:"Envoyer",hello:"Bonjour ! Posez vos questions sur les matériaux pour une maison durable.",
     }
   };
   let connected = true;
@@ -35,6 +35,7 @@
   let serverMode = "guide";
   let conversation = [];
   let pending = null;
+  let retryRequest = null;
   let generation = 0;
   let suggestionsAlreadyBound = false;
   let lastError = "";
@@ -90,7 +91,7 @@
     close.setAttribute("aria-label",c.dismiss);
     clear.setAttribute("aria-label",c.reset);
     send.setAttribute("aria-label",c.send);
-    status.textContent = connected ? (powered && serverMode !== "fallback" ? c.connected : c.guide) : c.loading;
+    status.textContent = connected ? (powered && serverMode === "ai" ? c.connected : powered && serverMode === "ready" ? c.ready : c.guide) : c.loading;
     note.textContent = localFile ? c.localOnly : powered ? c.hint : c.guideHint;
     input.setAttribute("aria-label", c.placeholder);
     const suggestions = document.getElementById("ed-agent-suggestions");
@@ -119,10 +120,11 @@
       } else element.appendChild(document.createTextNode(token));
     });
   }
-  function messageBubble(role, content, isPending) {
+  function messageBubble(role, content, isPending, mode) {
     const row = document.createElement("div");row.className="ed-agent-entry "+(role === "user" ? "user" : "assistant")+(isPending?" pending":"");
     const avatar=document.createElement("div");avatar.className="ed-agent-avatar";avatar.textContent=role === "user" ? copy().you : "✦";
     const bubble=document.createElement("div");bubble.className="ed-agent-bubble";
+    if(role==='assistant'&&!isPending){const label=document.createElement('strong');label.textContent=(mode==='ai'?copy().connected:copy().guide)+'\n';bubble.append(label);}
     boldText(bubble, String(content||""));
     row.append(avatar,bubble);return row;
   }
@@ -141,7 +143,7 @@
     }
     conversation.forEach(msg=>{
       if (msg && (msg.role === "assistant" || msg.role === "user") && typeof msg.content === "string") {
-        transcript.append(messageBubble(msg.role,msg.content,false));
+        transcript.append(messageBubble(msg.role,msg.content,false,msg.mode));
       }
     });
     if (pending && pending.type === "ask") {
@@ -167,19 +169,24 @@
     if (localFile) {lastError=copy().localOnly;updateView();return;}
     if (conversation.length >= 60) { lastError=copy().limit; updateView(); return; }
     const requestGeneration=generation;
+    const payload={question,context:collectContext(),history:conversation.slice(-10)};
+    const fingerprint=JSON.stringify(payload);
+    if(!retryRequest||retryRequest.fingerprint!==fingerprint)retryRequest={fingerprint,id:crypto.randomUUID()};
+    const requestId=retryRequest.id;
     const controller=new AbortController();
     pending={type:"ask",question,controller}; lastError=""; input.value=""; updateView();
     const timer=setTimeout(()=>controller.abort(),30000);
     try {
       const response=await fetch('/api/advisor', {
         method:'POST', headers:{'Content-Type':'application/json'}, signal:controller.signal,
-        body:JSON.stringify({question,context:collectContext(),history:conversation.slice(-10),requestId:crypto.randomUUID()})
+        body:JSON.stringify({...payload,requestId})
       });
       if (!response.ok) throw new Error('unavailable');
       const data=await response.json();
       if (typeof data.answer !== 'string' || !['ai','guide','fallback'].includes(data.mode)) throw new Error('invalid');
       if (requestGeneration !== generation) return;
-      conversation.push({role:'user',content:question},{role:'assistant',content:data.answer});
+      retryRequest=null;
+      conversation.push({role:'user',content:question},{role:'assistant',content:data.answer,mode:data.mode});
       serverMode=data.mode; powered=!!data.aiAvailable;
     } catch (_) {
       if (requestGeneration !== generation) return;
@@ -193,8 +200,8 @@
   launcher.addEventListener("click",()=>openPanel(true));
   close.addEventListener("click",()=>openPanel(false));
   clear.addEventListener("click",()=>{
-    generation++; pending?.controller.abort(); pending=null; conversation=[];lastError="";
-    input.value="";serverMode=powered?"ai":"guide";updateView();input.focus();
+    generation++; pending?.controller.abort(); pending=null; retryRequest=null; conversation=[];lastError="";
+    input.value="";serverMode=powered?"ready":"guide";updateView();input.focus();
   });
   form.addEventListener("submit",event=>{event.preventDefault();submitQuestion();});
   input.addEventListener("input",()=>{send.disabled=!!pending || !input.value.trim();});
@@ -205,7 +212,7 @@
   },true);
   // Fetch only mode metadata until a visitor explicitly asks a question.
   if (!localFile) fetch('/api/advisor',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{
-    if (data && typeof data.aiAvailable === 'boolean') {powered=data.aiAvailable;populateCopy();}
+    if (data && typeof data.aiAvailable === 'boolean' && !conversation.length && !pending) {powered=data.aiAvailable;serverMode=powered?'ready':'guide';populateCopy();}
   }).catch(()=>{});
   updateView();
 })();

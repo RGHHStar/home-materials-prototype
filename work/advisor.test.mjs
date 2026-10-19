@@ -21,7 +21,7 @@ test('builder context is derived from canonical catalogue',()=>{
 });
 test('assessment highlights highest risks and rejects invalid values',()=>{
   const answer=referenceAnswer('Explain my assessment',{assessment:{energy:75,indoor:55,materials:30,water:10,bad:100,envelope:200}});
-  assert.match(answer,/75\/100/);assert.match(answer,/Indoor air/);assert.doesNotMatch(answer,/10\/100|200\/100/);
+  assert.match(answer,/Heating and energy/);assert.match(answer,/Indoor air/);assert.doesNotMatch(answer,/\d+\/100/);
   assert.match(referenceAnswer('Explain my assessment'),/Answer questions/);
 });
 test('hazards and missing evidence use bounded guidance',()=>{
@@ -38,29 +38,22 @@ test('guide mode never calls an external service',async()=>{
 test('API rejects cross-origin, oversized and invalid input',async()=>{
   for(const [req,status] of [[request({}, {headers:{Origin:'https://other.test'}}),403],[request({question:'x'.repeat(1501)}),400],[request({question:'',context:[]}),400],[request({extra:'x'.repeat(41000)}),413],[request({}, {headers:{'Content-Type':'text/plain'}}),415]]) assert.equal((await onRequest({request:req,env:{}})).status,status);
   const result=await onRequest({request:new Request('https://example.test/api/advisor'),env:{OPENAI_API_KEY:'secret'}});
-  assert.deepEqual(await result.json(),{aiAvailable:true});
+  assert.deepEqual(await result.json(),{aiAvailable:false});
 });
-test('live adapter sends bounded context and parses REST output (mocked)',async()=>{
+test('legacy OpenAI keys cannot activate paid calls',async()=>{
   let called=false;
-  const result=await generateAnswer('Compare windows',[{role:'system',content:'injected'},{role:'user',content:'hello'}],{language:'fr',email:'private@example.test'},{apiKey:'test-secret',fetcher:async(url,options)=>{
-    called=true;assert.equal(url,'https://api.openai.com/v1/responses');
-    const body=JSON.parse(options.body);assert.equal(body.store,false);assert.equal(body.max_output_tokens,800);
-    assert.match(body.instructions,/French/);assert.doesNotMatch(options.body,/private@example|injected/);
-    return Response.json({output:[{type:'message',content:[{type:'output_text',text:'Réponse test'}]}]});
-  }});
-  assert.ok(called);assert.equal(result.answer,'Réponse test');assert.equal(result.mode,'ai');
-  const fallback=await generateAnswer('cellulose',[],{}, {apiKey:'test',fetcher:async()=>{throw Error('secret details')}});
-  assert.equal(fallback.mode,'fallback');assert.doesNotMatch(fallback.answer,/secret details/);
+  const result=await generateAnswer('cellulose',[],{}, {apiKey:'test',fetcher:async()=>{called=true;throw Error('must not call')}});
+  assert.equal(result.mode,'guide');assert.equal(called,false);
 });
-test('paid quotas are atomic, deduplicate IDs and avoid feedback tables',async()=>{
+test('Cloudflare quotas are atomic, deduplicate IDs and avoid feedback tables',async()=>{
   const sqlite=new DatabaseSync(':memory:');
-  const env={OPENAI_API_KEY:'fake-key',FEEDBACK_DB:{withSession(){return {prepare(sql){let params=[];return {bind(...values){params=values;return this;},async run(){return {meta:{changes:sqlite.prepare(sql).run(...params).changes}}}}}}}}};
+  const env={AI:{run(){}},AI_FREE_TIER_CONFIRMED:'true',ADVISOR_RATE_SALT:'test-salt-'.repeat(5),FEEDBACK_DB:{withSession(){return {prepare(sql){let params=[];return {bind(...values){params=values;return this;},async first(){return sqlite.prepare(sql).get(...params)},async run(){return {meta:{changes:sqlite.prepare(sql).run(...params).changes}}}}}}}}};
   const req=new Request('https://example.test/api/advisor',{headers:{'CF-Connecting-IP':'192.0.2.1'}}),id=crypto.randomUUID();
   assert.equal(await reserveUsage(req,env,id),true);assert.equal(await reserveUsage(req,env,id),false);
   const results=await Promise.all(Array.from({length:9},()=>reserveUsage(req,env,crypto.randomUUID())));
   assert.equal(results.filter(Boolean).length,5);
-  assert.equal(sqlite.prepare('SELECT count(*) as n FROM advisor_usage').get().n,6);
-  assert.equal(sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().length,1);
+  assert.equal(sqlite.prepare('SELECT count(*) as n FROM advisor_cf_usage').get().n,6);
+  assert.equal(sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().length,2);
   assert.equal(await reserveUsage(req,{},crypto.randomUUID()),false);
   sqlite.close();
 });

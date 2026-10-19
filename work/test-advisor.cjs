@@ -57,6 +57,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/user/.cache/co
     await page.unroute('**/api/advisor');
     await page.locator('#ed-agent-send').click();
     await page.waitForFunction(()=>document.querySelectorAll('.ed-agent-entry.assistant:not(.pending)').length===1);
+    assert.equal(questions.at(-1).requestId,questions.at(-2).requestId);
     // Clear while a request is pending must not resurrect its late response.
     await page.locator('#ed-agent-clear').click();
     let release;const delay=new Promise(resolve=>release=resolve);
