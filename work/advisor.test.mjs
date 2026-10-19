@@ -8,8 +8,8 @@ const request=(body,options={})=>new Request('https://example.test/api/advisor',
 test('catalogue comparison in both languages and retrieval',()=>{
   assert.equal(entries.filter(e=>e.kind==='plan').length,62);
   const en=referenceAnswer('Compare cellulose and mineral wool');
-  assert.match(en,/Cellulose/);assert.match(en,/Mineral Wool/i);assert.match(en,/Reference price/);
-  assert.match(referenceAnswer('Quelle isolation est plus écologique ?', {language:'fr'}),/prix/);
+  assert.match(en,/Cellulose/);assert.match(en,/Mineral Wool/i);assert.doesNotMatch(en,/Reference price|\/100/);
+  assert.match(referenceAnswer('Quelle isolation est plus écologique ?', {language:'fr'}),/catalogue/);
   assert.ok(selectReferences('Low-VOC paint for indoor health').slice(0,5).some(e=>e.name_en.includes('VOC')));
 });
 test('builder context is derived from canonical catalogue',()=>{

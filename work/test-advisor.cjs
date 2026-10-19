@@ -23,6 +23,13 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/user/.cache/co
     await page.screenshot({path:path.join(output,'desktop.png')});
     await page.locator('#ed-agent-clear').click();
     assert.equal(await page.locator('.ed-agent-entry').count(),0);
+    await page.locator('#ed-agent-input').fill('窗户有什么差异？');
+    await page.locator('#ed-agent-send').click();
+    await page.waitForFunction(()=>document.querySelectorAll('.ed-agent-entry.assistant:not(.pending)').length===1);
+    const windowsAnswer=await page.locator('.ed-agent-entry.assistant').innerText();
+    for(const name of ['Single-Pane Windows','Double-Pane Windows','Triple-Pane Windows']) assert.ok(windowsAnswer.includes(name));
+    assert.doesNotMatch(windowsAnswer,/Reference price|\/100/);
+    await page.locator('#ed-agent-clear').click();
     await page.evaluate(()=>{state.builderSelections.structural=0;});
     await page.locator('#ed-agent-input').fill('Improve my current design');
     await page.locator('#ed-agent-send').click();
@@ -35,7 +42,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/user/.cache/co
     await page.locator('#ed-agent-launcher').click();
     await page.locator('.ed-agent-prompt').first().click();
     await page.waitForFunction(()=>document.querySelectorAll('.ed-agent-entry.assistant:not(.pending)').length===1);
-    assert.match(await page.locator('.ed-agent-entry.assistant').innerText(),/prix/);
+    assert.match(await page.locator('.ed-agent-entry.assistant').innerText(),/catalogue/);
     assert.equal(questions.at(-1).context.language,'fr');
     assert.match(await page.locator('#ed-agent-note').innerText(),/sans IA/);
     await page.setViewportSize({width:390,height:844});

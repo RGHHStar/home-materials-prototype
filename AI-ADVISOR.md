@@ -10,6 +10,11 @@ The chat stays in page memory and is lost on reload. Clear cancels pending UI re
 
 ## Files and checks
 
+- `functions/_advisor/recognition.mjs` recognizes canonical material names, curated English/French/Chinese aliases, categories, intents and focus keywords before catalogue routing. Longest overlapping names win; material order is preserved while a sorted `answerKey` makes reversed comparisons equivalent for the future authored answer library. This is bounded keyword matching, not unrestricted language understanding or typo correction.
+- Questions such as “窗户有什么差异” route to the windows category; “rock wool vs fiberglass” resolves the two canonical materials. An incomplete comparison asks for the other material. The current UI still answers in its English/French language setting.
+- Material summaries no longer display price or numeric sustainability ratings. The existing description text and builder/assessment answer branches have not yet been rewritten into the requested original long-form answer library. Focus and pros/cons labels are ready for that library; they do not yet produce bespoke answers for each focus.
+- Recognition regression checks: `node --test work/advisor.test.mjs work/recognition.test.mjs`, including all 62 single materials, 3,782 ordered pairs, six orders of a sample triple, French names and Chinese aliases.
+
 - `agent-ui.css`, `agent-bridge.js`, advisor markup in `index.html`: UI and same-origin transport.
 - `functions/api/advisor.js`: mode metadata and validated question endpoint.
 - `functions/_advisor/`: canonical catalogue, bilingual reference guidance and optional AI adapter.

@@ -1,8 +1,9 @@
 // JavaScript port of the teacher-provided ai_agent.py, for Cloudflare Pages.
 import catalog from './catalog.mjs';
-import {SYSTEM_KEYWORDS, ASSESSMENT_TIPS, SYSTEM_INSTRUCTIONS, STOPWORDS} from './reference.mjs';
+import {normalize, recognizeQuestion} from './recognition.mjs';
+export {normalize, recognizeQuestion} from './recognition.mjs';
+import {ASSESSMENT_TIPS, SYSTEM_INSTRUCTIONS, STOPWORDS} from './reference.mjs';
 
-export const normalize = value => String(value ?? '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const stopwords = new Set(STOPWORDS);
 const words = value => new Set(normalize(value).split(' ').filter(w=>w.length>2&&!stopwords.has(w)));
 export const entries = catalog.systems.flatMap(system=>system.items.map(item=>({
@@ -34,21 +35,10 @@ export function sanitizeContext(value) {
   return {language:raw.language==='fr'?'fr':'en',route:text(raw.route,60),planSystem:catalog.systems.some(s=>s.id===raw.planSystem)?raw.planSystem:'',assessmentCount:Number.isInteger(raw.assessmentCount)?Math.max(0,Math.min(40,raw.assessmentCount)):0,assessment,selections};
 }
 export function inferSystem(question) {
-  const q=` ${normalize(question)} `;
-  let best=null,strength=0;
-  for(const [id,aliases] of Object.entries(SYSTEM_KEYWORDS)) for(const alias of aliases) {
-    const key=normalize(alias),score=key.split(' ').length*10+Math.min(key.length,12);
-    if(key&&q.includes(` ${key} `)&&score>strength){best=id;strength=score;}
-  }
-  return best;
+  return recognizeQuestion(question).systems[0]||null;
 }
 function findMentions(question) {
-  const q=` ${normalize(question)} `, found=new Map();
-  for(const entry of entries) if([entry.name_en,entry.name_fr,...(entry.aliases||[])].some(a=>normalize(a).length>=5&&q.includes(` ${normalize(a)} `))) {
-    const key=normalize(entry.name_en);
-    if(!found.has(key)||entry.kind==='plan') found.set(key,entry);
-  }
-  return [...found.values()];
+  return recognizeQuestion(question).materials.map(name=>entries.find(e=>e.kind==='plan'&&e.name_en===name));
 }
 export function selectReferences(question,context={},limit=8) {
   const terms=words(question),system=inferSystem(question),mentioned=new Set(findMentions(question).map(e=>normalize(e.name_en)));
@@ -58,8 +48,7 @@ export function selectReferences(question,context={},limit=8) {
   return [...entries].sort((a,b)=>score(b)-score(a)).slice(0,limit);
 }
 function details(e,lang) {
-  const score=e.score===null?'':`${lang==='fr'?'Score de durabilité':'Sustainability'} : ${e.score}/100. `;
-  return `**${e['name_'+lang]}** — ${score}${e['description_'+lang]} ${lang==='fr'?'Référence de prix':'Reference price'}: ${e['price_'+lang]}.`;
+  return `**${e['name_'+lang]}** — ${e['description_'+lang]}`;
 }
 export function referenceAnswer(question, rawContext={}) {
   const ctx=sanitizeContext(rawContext),fr=ctx.language==='fr',lang=ctx.language,q=normalize(question);
@@ -81,21 +70,24 @@ export function referenceAnswer(question, rawContext={}) {
     }
     return (fr?'D’après vos choix actuels dans l’outil de conception :':'Based on your current selections in the home builder:')+'\n'+(suggestions.slice(0,4).join('\n')||(fr?'Vos choix ont déjà de bonnes notes dans le catalogue.':'Your selected options already score well within the catalogue.'))+'\n\n'+(fr?'Scores comparatifs du prototype, pas une étude technique. Vérifiez le climat, la compatibilité et les devis.':'These are prototype comparison scores, not engineering recommendations. Verify climate, compatibility and contractor quotes.');
   }
-  const mentions=findMentions(question).sort((a,b)=>(a.kind==='plan'?0:1)-(b.kind==='plan'?0:1));
-  const comparison=/\b(compare|comparer|comparaison|versus|vs|difference)\b/.test(q);
-  const system=inferSystem(question);
+  const recognized=recognizeQuestion(question), mentions=findMentions(question);
+  const comparison=recognized.intent==='compare';
+  const system=recognized.systems[0];
+  if(comparison&&mentions.length===1) return (fr?'Quel autre matériau souhaitez-vous comparer avec ':'Which other material would you like to compare with ')+mentions[0]['name_'+lang]+'?';
+  if(comparison&&!mentions.length&&recognized.systems.length>1) return fr?'Nommez deux ou trois matériaux à comparer dans ces catégories.':'Please name two or three materials to compare from those categories.';
+  if(mentions.length>3) return fr?'Choisissez jusqu’à trois matériaux pour cette comparaison.':'Please choose up to three materials for this comparison.';
   let choices=mentions.slice(0,comparison?3:2);
   let heading=fr?'Voici les informations du catalogue EverDwell :':'Here is what the EverDwell catalogue says:';
   if(comparison&&choices.length>=2) heading=fr?'Comparaison des options du catalogue EverDwell :':'Comparison using the EverDwell reference catalogue:';
-  if(!choices.length&&system){choices=entries.filter(e=>e.kind==='plan'&&e.system_id===system).sort((a,b)=>b.score-a.score).slice(0,3);heading=fr?'Options bien notées dans le catalogue (classement du prototype, pas une recommandation absolue) :':'Higher-scoring catalogue options (prototype ranking, not a universal recommendation):';}
-  if(choices.length) return heading+'\n\n'+choices.map(e=>details(e,lang)).join('\n\n')+'\n\n'+(fr?'Les prix CAD et scores sont indicatifs. Les unités varient ; vérifiez le produit, le climat et les conditions d’installation.':'CAD prices and scores are reference values. Units vary; verify the product, climate and installation conditions.');
+  if(!choices.length&&system){choices=entries.filter(e=>e.kind==='plan'&&e.system_id===system);heading=fr?'Options de cette catégorie dans le catalogue EverDwell :':'Options in this EverDwell catalogue category:';}
+  if(choices.length) return heading+'\n\n'+choices.map(e=>details(e,lang)).join('\n\n');
   return fr?'Je peux comparer les matériaux d’isolation, fenêtres, toitures, planchers, peintures et autres options du catalogue EverDwell. Essayez « Comparer la cellulose et la laine minérale ».\n\nVous utilisez le guide du catalogue, sans IA conversationnelle. Posez une question complète en nommant les matériaux.':'I can compare insulation, windows, roofing, flooring, paints and other EverDwell catalogue options. Try “Compare cellulose and mineral wool”.\n\nThis is catalogue guidance, not live conversational AI. Ask a complete question naming the materials.';
 }
 export async function generateAnswer(question,history,context,{apiKey='',model='gpt-4.1-mini',fetcher=fetch}={}) {
   const ctx=sanitizeContext(context);
   if(!apiKey) return {answer:referenceAnswer(question,ctx),mode:'guide',aiAvailable:false};
   const safeHistory=(Array.isArray(history)?history:[]).slice(-10).filter(m=>m&&['user','assistant'].includes(m.role)&&typeof m.content==='string').map(m=>({role:m.role,content:m.content.slice(0,2400)}));
-  const prompt=JSON.stringify({question,language:ctx.language,pageContext:ctx,references:selectReferences(question,ctx)});
+  const prompt=JSON.stringify({question,recognized:recognizeQuestion(question),language:ctx.language,pageContext:ctx,references:selectReferences(question,ctx)});
   try {
     const response=await fetcher('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({model,instructions:SYSTEM_INSTRUCTIONS+`\nAnswer in ${ctx.language==='fr'?'French':'English'}.`,input:[...safeHistory,{role:'user',content:prompt}],max_output_tokens:800,store:false}),signal:AbortSignal.timeout(22000)});
     if(!response.ok) throw new Error('provider_unavailable');
