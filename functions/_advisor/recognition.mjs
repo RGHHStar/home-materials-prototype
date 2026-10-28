@@ -53,7 +53,7 @@ function occurrences(q, alias) {
   }
   return hits;
 }
-const materialIndex=catalog.systems.flatMap(s=>s.items.map((item,i)=>({name:item.en,system:s.id,aliases:[item.en,item.fr,...(aliases[s.id]?.[i]||'').split('|')]})));
+const materialIndex=catalog.systems.flatMap(s=>s.items.map((item,i)=>({name:item.en,system:s.id,aliases:[item.en,...(/s$/i.test(item.en)?[]:[item.en+'s']),item.fr,...(aliases[s.id]?.[i]||'').split('|')]})));
 const keys=(q,dict)=>Object.entries(dict).filter(([,value])=>value.split('|').some(a=>occurrences(q,a).length)).map(([key])=>key);
 export function recognizeQuestion(question) {
   const q=normalize(question);

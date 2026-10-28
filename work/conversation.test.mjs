@@ -22,6 +22,10 @@ test('same-category topic changes replace the old material too',()=>{
   assert.ok(data.references.every(r=>/cellulose/i.test(r.material)));
   assert.doesNotMatch(JSON.stringify(data),/spray foam/i);
 });
+test('common plurals preserve both comparison subjects',()=>{
+  assert.deepEqual(resolveQuestion('Compare copper pipes and PEX pipes',[]).materials,['Copper Pipe','PEX Pipe']);
+  assert.deepEqual(resolveQuestion('Compare silicone sealants and acrylic sealants',[]).materials,['Silicone Sealant','Acrylic Sealant']);
+});
 test('EN FR and Chinese follow-ups retain subjects across multiple turns',()=>{
   for(const [start,second,third] of [
     ['Compare cellulose and mineral wool','Which handles dampness better?','And what about installation?'],

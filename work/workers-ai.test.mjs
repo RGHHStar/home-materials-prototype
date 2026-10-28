@@ -119,6 +119,12 @@ test('previous assistant speculation is not recycled as evidence',()=>{
   ],{});
   assert.doesNotMatch(JSON.stringify(messages),/UNSUPPORTED/);
 });
+test('unsupported brands and zero-VOC absolute claims are rejected',()=>{
+  const messages=buildMessages('Explain low-VOC paint',[],{});
+  assert.throws(()=>validateGroundedAnswer('Try Benjamin Moore Natura. [1]',messages,'en'),/unsupported_name/);
+  assert.throws(()=>validateGroundedAnswer('Try AFM paint. [1]',messages,'en'),/unsupported_name/);
+  assert.throws(()=>validateGroundedAnswer('Zero-VOC paints contain no volatile compounds. [1]',messages,'en'),/unsupported_absolute/);
+});
 test('external sources are server-owned, cited separately and added only for relevant questions',async t=>{
   const {env}=setup(t,async()=>({response:'Low-E coatings reflect heat energy. [5]'}));
   const result=await answerWithWorkersAI(request(),env,body({question:'What does Low-E glass do?'}));
