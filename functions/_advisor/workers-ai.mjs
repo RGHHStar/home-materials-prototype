@@ -107,6 +107,9 @@ export function validateGroundedAnswer(answer,messages,language) {
   if(answer.split(/\s+/).length>100)throw new Error('answer_length');
   const references=JSON.parse(messages.at(-1).content).references;
   const evidence=references.map(r=>r.material+' '+r.description+' '+(r.safety||'')).join(' ').toLowerCase();
+  // Targeted guard for unsupported technical expansions observed in live testing.
+  const addedClaims=answer.toLowerCase().match(/\b(?:solvents?|pigments?|species|scratches|dents|cracks?|strength|replanting|harvesting|moso|bambusa)\b/g)||[];
+  if(addedClaims.some(word=>!evidence.includes(word.replace(/s$/,''))))throw new Error('unsupported_expansion');
   // Reject newly introduced multiword names/acronyms, a common branded-product hallucination.
   const names=answer.match(/\b(?:[A-Z][a-z’'-]+\s+){1,3}[A-Z][a-z’'-]+\b|\b[A-Z]{2,}\b/g)||[];
   if(names.some(name=>!evidence.includes(name.toLowerCase())))throw new Error('unsupported_name');

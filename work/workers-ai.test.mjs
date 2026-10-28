@@ -124,6 +124,8 @@ test('unsupported brands and zero-VOC absolute claims are rejected',()=>{
   assert.throws(()=>validateGroundedAnswer('Try Benjamin Moore Natura. [1]',messages,'en'),/unsupported_name/);
   assert.throws(()=>validateGroundedAnswer('Try AFM paint. [1]',messages,'en'),/unsupported_name/);
   assert.throws(()=>validateGroundedAnswer('Zero-VOC paints contain no volatile compounds. [1]',messages,'en'),/unsupported_absolute/);
+  assert.throws(()=>validateGroundedAnswer('Some low-VOC paints are made with water or plant-based solvents. [1]',messages,'en'),/unsupported_expansion/);
+  assert.throws(()=>validateGroundedAnswer('These paints use natural pigments and recycled materials. [1]',messages,'en'),/unsupported_expansion/);
 });
 test('external sources are server-owned, cited separately and added only for relevant questions',async t=>{
   const {env}=setup(t,async()=>({response:'Low-E coatings reflect heat energy. [5]'}));
